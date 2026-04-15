@@ -1,0 +1,11 @@
+# IntelliJ files
+.idea/
+*.iml
+out/
+gen/
+
+# Maven files
+target/
+
+# Logs y temporales
+*.log
