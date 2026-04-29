@@ -52,4 +52,10 @@ public class VMComment {
                 ", createdOn='" + createdOn + '\'' +
                 '}';
     }
+
+    public VMComment(String id, String createdOn, String text) {
+        this.id = id;
+        this.createdOn = createdOn;
+        this.text = text;
+    }
 }

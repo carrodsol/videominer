@@ -62,4 +62,10 @@ public class VMUser {
                 '}';
     }
 
+    public VMUser(String picture_link, String user_link, String name, Long id) {
+        this.picture_link = picture_link;
+        this.user_link = user_link;
+        this.name = name;
+        this.id = id;
+    }
 }

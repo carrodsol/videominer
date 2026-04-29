@@ -52,4 +52,12 @@ public class Subtitles {
         this.url = url;
     }
 
+    @Override
+    public String toString() {
+        return "Subtitles{" +
+                "id='" + id + '\'' +
+                ", language='" + language + '\'' +
+                ", url='" + url + '\'' +
+                '}';
+    }
 }

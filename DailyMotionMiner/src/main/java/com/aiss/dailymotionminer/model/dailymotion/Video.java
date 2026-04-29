@@ -104,4 +104,16 @@ public class Video {
         this.owner = owner;
     }
 
+    @Override
+    public String toString() {
+        return "Video{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", createdTime=" + createdTime +
+                ", channel='" + channel + '\'' +
+                ", tags=" + tags +
+                ", owner='" + owner + '\'' +
+                '}';
+    }
 }

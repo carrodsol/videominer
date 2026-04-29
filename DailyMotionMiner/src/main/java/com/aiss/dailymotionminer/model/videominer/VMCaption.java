@@ -52,4 +52,10 @@ public class VMCaption {
                 ", language='" + language + '\'' +
                 '}';
     }
+
+    public VMCaption(String id, String language, String name) {
+        this.id = id;
+        this.language = language;
+        this.name = name;
+    }
 }

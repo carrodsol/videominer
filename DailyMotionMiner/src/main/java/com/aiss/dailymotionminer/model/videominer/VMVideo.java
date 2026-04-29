@@ -103,4 +103,14 @@ public class VMVideo {
                 ", captions=" + captions +
                 '}';
     }
+
+    public VMVideo(String id, String name, String description, VMUser author, String releaseTime, List<VMComment> comments, List<VMCaption> captions) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.author = author;
+        this.releaseTime = releaseTime;
+        this.comments = comments;
+        this.captions = captions;
+    }
 }

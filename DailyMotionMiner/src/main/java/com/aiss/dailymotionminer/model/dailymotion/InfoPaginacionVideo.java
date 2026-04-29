@@ -90,4 +90,15 @@ public class InfoPaginacionVideo {
         this.videos = list;
     }
 
+    @Override
+    public String toString() {
+        return "InfoPaginacionVideo{" +
+                "page=" + page +
+                ", limit=" + limit +
+                ", explicit=" + explicit +
+                ", total=" + total +
+                ", hasMore=" + hasMore +
+                ", videos=" + videos +
+                '}';
+    }
 }

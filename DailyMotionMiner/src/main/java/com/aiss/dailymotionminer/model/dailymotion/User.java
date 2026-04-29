@@ -64,4 +64,13 @@ public class User {
         this.avatar720Url = avatar720Url;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", url='" + url + '\'' +
+                ", avatar720Url='" + avatar720Url + '\'' +
+                '}';
+    }
 }

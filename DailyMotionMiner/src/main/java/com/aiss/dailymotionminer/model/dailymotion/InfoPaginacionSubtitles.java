@@ -91,4 +91,15 @@ public class InfoPaginacionSubtitles {
         this.subtitles = subtitles;
     }
 
+    @Override
+    public String toString() {
+        return "InfoPaginacionSubtitles{" +
+                "page=" + page +
+                ", limit=" + limit +
+                ", explicit=" + explicit +
+                ", total=" + total +
+                ", hasMore=" + hasMore +
+                ", subtitles=" + subtitles +
+                '}';
+    }
 }

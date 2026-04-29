@@ -86,4 +86,12 @@ public class VMChannel {
                 ", videos=" + videos +
                 '}';
     }
+
+    public VMChannel(String id, List<VMVideo> videos, String createdTime, String description, String name) {
+        this.id = id;
+        this.videos = videos;
+        this.createdTime = createdTime;
+        this.description = description;
+        this.name = name;
+    }
 }

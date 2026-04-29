@@ -1,10 +1,14 @@
 package com.aiss.dailymotionminer.service;
 
+import com.aiss.dailymotionminer.model.dailymotion.InfoPaginacionVideo;
 import com.aiss.dailymotionminer.model.dailymotion.Video;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -12,6 +16,29 @@ public class VideoService {
 
     @Autowired
     RestTemplate restTemplate;
+
+    @Value("${DailyMotionMiner.baseUri}")
+    private String baseUri;
+
+    // Campos solicitados, todos definidos en application.propeties:
+    // id,title,description,created_time,channel,tags,owner
+    @Value("${DailyMotionMiner.videoFields}")
+    private String fields;
+
+    // Encuentra simplemente los videos teniendo en cuenta la paginación.
+    public List<Video> findAllVideos(Integer maxVideos, Integer maxPages) {
+        List<Video> videos = new ArrayList<>();
+        int page = 1;
+        boolean hasMore = true;
+        while (hasMore && (page <= maxPages)) {
+            String url = this.baseUri + "/videos" + fields + "&limit=" + maxVideos + "&page=" + page;
+                InfoPaginacionVideo listaVideos = restTemplate.getForObject(url, InfoPaginacionVideo.class);
+                videos.addAll(listaVideos.getVideos());
+                hasMore = listaVideos.getHasMore();
+                page++;
+        }
+        return videos;
+    }
 
 
 }
