@@ -1,4 +1,3 @@
-
 package com.aiss.dailymotionminer.model.dailymotion;
 
 import javax.annotation.processing.Generated;
@@ -8,15 +7,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "page",
-    "limit",
-    "explicit",
-    "total",
-    "has_more",
-    "list"
+        "page",
+        "limit",
+        "explicit",
+        "total",
+        "has_more",
+        "list"
 })
 @Generated("jsonschema2pojo")
-public class InfoPaginacionSubtitles {
+public class InfoPaginacionVideo {
 
     @JsonProperty("page")
     private Integer page;
@@ -29,7 +28,7 @@ public class InfoPaginacionSubtitles {
     @JsonProperty("has_more")
     private Boolean hasMore;
     @JsonProperty("list")
-    private java.util.List<Subtitles> subtitles;
+    private java.util.List<Video> videos;
 
     @JsonProperty("page")
     public Integer getPage() {
@@ -82,13 +81,13 @@ public class InfoPaginacionSubtitles {
     }
 
     @JsonProperty("list")
-    public java.util.List<Subtitles> getSubtitles() {
-        return subtitles;
+    public java.util.List<Video> getVideos() {
+        return videos;
     }
 
     @JsonProperty("list")
-    public void setSubtitles(java.util.List<Subtitles> subtitles) {
-        this.subtitles = subtitles;
+    public void setVideos(java.util.List<Video> list) {
+        this.videos = list;
     }
 
 }

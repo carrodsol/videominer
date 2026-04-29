@@ -28,7 +28,7 @@ public class InfoPaginacionCanales {
     private Integer total;
     @JsonProperty("has_more")
     private Boolean hasMore;
-    @JsonProperty("channels")
+    @JsonProperty("list")
     private java.util.List<Channels> channels;
 
     @JsonProperty("page")
@@ -81,12 +81,12 @@ public class InfoPaginacionCanales {
         this.hasMore = hasMore;
     }
 
-    @JsonProperty("channels")
+    @JsonProperty("list")
     public java.util.List<Channels> getChannels() {
         return channels;
     }
 
-    @JsonProperty("channels")
+    @JsonProperty("list")
     public void setChannels(java.util.List<Channels> channels) {
         this.channels = channels;
     }
