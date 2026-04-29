@@ -9,18 +9,18 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "id",
-    "language",
-    "url"
+    "name",
+    "description"
 })
 @Generated("jsonschema2pojo")
-public class List {
+public class Channels {
 
     @JsonProperty("id")
     private String id;
-    @JsonProperty("language")
-    private String language;
-    @JsonProperty("url")
-    private String url;
+    @JsonProperty("name")
+    private String name;
+    @JsonProperty("description")
+    private String description;
 
     @JsonProperty("id")
     public String getId() {
@@ -32,24 +32,24 @@ public class List {
         this.id = id;
     }
 
-    @JsonProperty("language")
-    public String getLanguage() {
-        return language;
+    @JsonProperty("name")
+    public String getName() {
+        return name;
     }
 
-    @JsonProperty("language")
-    public void setLanguage(String language) {
-        this.language = language;
+    @JsonProperty("name")
+    public void setName(String name) {
+        this.name = name;
     }
 
-    @JsonProperty("url")
-    public String getUrl() {
-        return url;
+    @JsonProperty("description")
+    public String getDescription() {
+        return description;
     }
 
-    @JsonProperty("url")
-    public void setUrl(String url) {
-        this.url = url;
+    @JsonProperty("description")
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }
