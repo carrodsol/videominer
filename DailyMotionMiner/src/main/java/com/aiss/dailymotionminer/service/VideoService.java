@@ -40,5 +40,20 @@ public class VideoService {
         return videos;
     }
 
+    // Encuentra los videos de un canal teniendo en cuenta la paginación
+    public List<Video> findAllVideosByChannelId(String channelId, Integer maxVideos, Integer maxPages) {
+        List<Video> videos = new ArrayList<>();
+        int page = 1;
+        boolean hasMore = true;
+        while (hasMore && (page <= maxPages)) {
+            String url = this.baseUri + "/videos" + fields + "&limit=" + maxVideos + "&page=" + page + "&channel=" + channelId;
+                InfoPaginacionVideo listaVideos = restTemplate.getForObject(url, InfoPaginacionVideo.class);
+                videos.addAll(listaVideos.getVideos());
+                hasMore = listaVideos.getHasMore();
+                page++;
+        }
+        return videos;
+    }
+
 
 }

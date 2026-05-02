@@ -52,4 +52,8 @@ public class Channels {
         this.description = description;
     }
 
+    @Override
+    public String toString() {
+        return "Channels{id='" + id + "', name='" + name + "', description='" + description + "'}";
+    }
 }

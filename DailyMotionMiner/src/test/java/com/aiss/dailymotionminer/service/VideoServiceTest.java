@@ -27,4 +27,11 @@ class VideoServiceTest {
     }
 
 
+    @Test
+    @DisplayName("Obtiene todos los videos dado un canal")
+    void findAllVideosByChannelId() {
+        List<Video> listaVideos = videoService.findAllVideosByChannelId("shortfilms",10,2);
+        assertFalse(listaVideos.isEmpty());
+        System.out.println("listaVideos: " + listaVideos);
+    }
 }

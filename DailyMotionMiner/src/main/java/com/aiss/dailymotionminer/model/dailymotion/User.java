@@ -15,51 +15,51 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Generated("jsonschema2pojo")
 public class User {
 
-    @JsonProperty("id")
+    @JsonProperty("owner.id")
     private String id;
-    @JsonProperty("username")
+    @JsonProperty("owner.username")
     private String username;
-    @JsonProperty("url")
+    @JsonProperty("owner.url")
     private String url;
-    @JsonProperty("avatar_720_url")
+    @JsonProperty("owner.avatar_720_url")
     private String avatar720Url;
 
-    @JsonProperty("id")
+    @JsonProperty("owner.id")
     public String getId() {
         return id;
     }
 
-    @JsonProperty("id")
+    @JsonProperty("owner.id")
     public void setId(String id) {
         this.id = id;
     }
 
-    @JsonProperty("username")
+    @JsonProperty("owner.username")
     public String getUsername() {
         return username;
     }
 
-    @JsonProperty("username")
+    @JsonProperty("owner.username")
     public void setUsername(String username) {
         this.username = username;
     }
 
-    @JsonProperty("url")
+    @JsonProperty("owner.url")
     public String getUrl() {
         return url;
     }
 
-    @JsonProperty("url")
+    @JsonProperty("owner.url")
     public void setUrl(String url) {
         this.url = url;
     }
 
-    @JsonProperty("avatar_720_url")
+    @JsonProperty("owner.avatar_720_url")
     public String getAvatar720Url() {
         return avatar720Url;
     }
 
-    @JsonProperty("avatar_720_url")
+    @JsonProperty("owner.avatar_720_url")
     public void setAvatar720Url(String avatar720Url) {
         this.avatar720Url = avatar720Url;
     }
