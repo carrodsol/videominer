@@ -17,12 +17,12 @@ public class ChannelService {
     private String baseUri;
 
     // Campos solicitados, todos definidos en application.propeties:
-    // id,name,description (por defecto vienen esos)
+    // id,name,description,created_time
     @Value("${DailyMotionMiner.channelFields}")
     private String fields;
 
     // Encuentra un canal concreto
-    // GET https://api.dailymotion.com/channel/:id
+    // GET https://api.dailymotion.com/channel/:id?fields=id,name,description,created_time
     public Channels findChannelById(String id) {
         String url = this.baseUri + "/channel/" + id + fields;
         return restTemplate.getForObject(url, Channels.class);

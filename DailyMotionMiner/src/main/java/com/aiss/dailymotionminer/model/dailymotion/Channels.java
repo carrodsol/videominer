@@ -21,6 +21,8 @@ public class Channels {
     private String name;
     @JsonProperty("description")
     private String description;
+    @JsonProperty("created_time")
+    private Integer createdTime;
 
     @JsonProperty("id")
     public String getId() {
@@ -52,8 +54,14 @@ public class Channels {
         this.description = description;
     }
 
+    @JsonProperty("created_time")
+    public Integer getCreatedTime() { return createdTime; }
+
+    @JsonProperty("created_time")
+    public void setCreatedTime(Integer createdTime) { this.createdTime = createdTime; }
+
     @Override
     public String toString() {
-        return "Channels{id='" + id + "', name='" + name + "', description='" + description + "'}";
+        return "Channels{id='" + id + "', name='" + name + "', description='" + description + "', createdTime='" + createdTime + "'}";
     }
 }
