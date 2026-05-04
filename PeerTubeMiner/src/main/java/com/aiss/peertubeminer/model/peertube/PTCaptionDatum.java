@@ -10,11 +10,11 @@ public class PTCaptionDatum {
     private PTCaptionLanguage language;
 
     @JsonProperty("fileUrl")
-    private String fileUrl;
+    private String link;
 
     public PTCaptionLanguage getLanguage() { return language; }
     public void setLanguage(PTCaptionLanguage language) { this.language = language; }
 
-    public String getFileUrl() { return fileUrl; }
-    public void setFileUrl(String fileUrl) { this.fileUrl = fileUrl; }
+    public String getLink() { return link; }
+    public void setLink(String link) { this.link = link; }
 }

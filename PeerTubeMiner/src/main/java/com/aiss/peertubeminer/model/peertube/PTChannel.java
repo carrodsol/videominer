@@ -12,14 +12,11 @@ public class PTChannel {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("displayName")
-    private String displayName;
-
     @JsonProperty("description")
     private String description;
 
     @JsonProperty("createdAt")
-    private String createdAt;
+    private String createdTime;
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -27,12 +24,9 @@ public class PTChannel {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public String getDisplayName() { return displayName; }
-    public void setDisplayName(String displayName) { this.displayName = displayName; }
-
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public String getCreatedAt() { return createdAt; }
-    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public String getCreatedTime() { return createdTime; }
+    public void setCreatedTime(String createdTime) { this.createdTime = createdTime; }
 }

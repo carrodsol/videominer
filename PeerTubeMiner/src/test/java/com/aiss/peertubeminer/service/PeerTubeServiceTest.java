@@ -18,7 +18,7 @@ class PeerTubeServiceTest {
         PTChannel canal = service.getChannel("1");
         assertNotNull(canal,"No puede ser nulo.");
         System.out.println(canal);
-
+//TODO ARREGLAR
     }
 
     @Test

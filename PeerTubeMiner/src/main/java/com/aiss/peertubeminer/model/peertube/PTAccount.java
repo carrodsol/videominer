@@ -14,7 +14,7 @@ public class PTAccount {
     private String name;
 
     @JsonProperty("url")
-    private String url;
+    private String userLink;
 
     @JsonProperty("avatars")
     private List<PTAccountAvatar> avatars;
@@ -25,11 +25,8 @@ public class PTAccount {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public String getDisplayName() { return displayName; }
-    public void setDisplayName(String displayName) { this.displayName = displayName; }
-
-    public String getUrl() { return url; }
-    public void setUrl(String url) { this.url = url; }
+    public String getUserLink() { return userLink; }
+    public void setUserLink(String userLink) { this.userLink = userLink; }
 
     public List<PTAccountAvatar> getAvatars() { return avatars; }
     public void setAvatars(List<PTAccountAvatar> avatars) { this.avatars = avatars; }

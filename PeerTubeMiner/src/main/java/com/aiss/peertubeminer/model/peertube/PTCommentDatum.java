@@ -13,7 +13,7 @@ public class PTCommentDatum {
     private String text;
 
     @JsonProperty("createdAt")
-    private String createdAt;
+    private String createdOn;
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -21,6 +21,6 @@ public class PTCommentDatum {
     public String getText() { return text; }
     public void setText(String text) { this.text = text; }
 
-    public String getCreatedAt() { return createdAt; }
-    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public String getCreatedOn() { return createdOn; }
+    public void setCreatedOn(String createdOn) { this.createdOn = createdOn; }
 }

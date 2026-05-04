@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PTAccountAvatar {
 
     @JsonProperty("fileUrl")
-    private String fileUrl;
+    private String pictureLink;
 
-    public String getFileUrl() { return fileUrl; }
-    public void setFileUrl(String fileUrl) { this.fileUrl = fileUrl; }
+    public String getPictureLink() { return pictureLink; }
+    public void setPictureLink(String pictureLink) { this.pictureLink = pictureLink; }
 }
