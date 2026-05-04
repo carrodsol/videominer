@@ -1,6 +1,7 @@
 package com.aiss.dailymotionminer.service;
 
 
+import com.aiss.dailymotionminer.model.dailymotion.InfoPaginacionSubtitles;
 import com.aiss.dailymotionminer.model.dailymotion.Subtitles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,9 +23,9 @@ public class SubtitleService {
     private String fields;
 
     // Encuentra los subtítulos de un vídeo en concreto
-    public Subtitles findSubtitlesByVideoId(String videoId) {
+    public InfoPaginacionSubtitles findSubtitlesByVideoId(String videoId) {
         String url = this.baseUri + "/video/" + videoId + "/subtitles" + fields;
-        return restTemplate.getForObject(url, Subtitles.class);
+        return restTemplate.getForObject(url, InfoPaginacionSubtitles.class);
     }
 
 
