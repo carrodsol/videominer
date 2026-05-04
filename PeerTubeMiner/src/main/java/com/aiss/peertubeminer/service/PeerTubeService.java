@@ -17,15 +17,12 @@ public class PeerTubeService {
     private String baseUrl;
 
     public PTChannel getChannel(String channelId) {
-        String url = "https://peertube2.cpy.re" + "/api/v1/video-channels/" + channelId;
+        String url = baseUrl  + "/api/v1/video-channels/" + channelId;
         return restTemplate.getForObject(url, PTChannel.class);
     }
 
     public PTVideoList getVideosFromChannel(String channelId, int maxVideos) {
-        String url = UriComponentsBuilder
-                .fromHttpUrl(baseUrl + "/api/v1/video-channels/" + channelId + "/videos")
-                .queryParam("count", maxVideos)
-                .toUriString();
+        String url = baseUrl + "/api/v1/video-channels/" + channelId + "/videos?count=" + maxVideos;
         return restTemplate.getForObject(url, PTVideoList.class);
     }
 
@@ -35,10 +32,7 @@ public class PeerTubeService {
     }
 
     public PTCommentList getComments(String videoUuid, int maxComments) {
-        String url = UriComponentsBuilder
-                .fromHttpUrl(baseUrl + "/api/v1/videos/" + videoUuid + "/comment-threads")
-                .queryParam("count", maxComments)
-                .toUriString();
+      String url = baseUrl + "/api/v1/videos/" + videoUuid + "/comment-threads?count=" + maxComments;
         return restTemplate.getForObject(url, PTCommentList.class);
     }
 }

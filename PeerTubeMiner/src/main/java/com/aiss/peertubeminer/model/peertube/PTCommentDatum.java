@@ -9,6 +9,9 @@ public class PTCommentDatum {
     @JsonProperty("id")
     private Integer id;
 
+    @JsonProperty("uuid")
+    private String uuid;
+
     @JsonProperty("text")
     private String text;
 
@@ -17,6 +20,9 @@ public class PTCommentDatum {
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
+
+    public String getUuid() { return uuid; }
+    public void setUuid(String uuid) { this.uuid = uuid; }
 
     public String getText() { return text; }
     public void setText(String text) { this.text = text; }
