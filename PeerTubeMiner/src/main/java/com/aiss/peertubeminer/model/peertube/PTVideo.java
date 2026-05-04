@@ -16,7 +16,7 @@ public class PTVideo {
     private String description;
 
     @JsonProperty("publishedAt")
-    private String publishedAt;
+    private String releaseTime;
 
     @JsonProperty("createdAt")
     private String createdAt;
@@ -33,8 +33,8 @@ public class PTVideo {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public String getPublishedAt() { return publishedAt; }
-    public void setPublishedAt(String publishedAt) { this.publishedAt = publishedAt; }
+    public String getReleaseTime() { return releaseTime; }
+    public void setReleaseTime(String releaseTime) { this.releaseTime = releaseTime; }
 
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }

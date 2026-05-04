@@ -13,14 +13,11 @@ public class PTAccount {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("displayName")
-    private String displayName;
-
     @JsonProperty("url")
     private String url;
 
     @JsonProperty("avatars")
-    private List<PTAvatar> avatars;
+    private List<PTAccountAvatar> avatars;
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -34,6 +31,6 @@ public class PTAccount {
     public String getUrl() { return url; }
     public void setUrl(String url) { this.url = url; }
 
-    public List<PTAvatar> getAvatars() { return avatars; }
-    public void setAvatars(List<PTAvatar> avatars) { this.avatars = avatars; }
+    public List<PTAccountAvatar> getAvatars() { return avatars; }
+    public void setAvatars(List<PTAccountAvatar> avatars) { this.avatars = avatars; }
 }

@@ -17,7 +17,7 @@ public class PeerTubeService {
     private String baseUrl;
 
     public PTChannel getChannel(String channelId) {
-        String url = baseUrl + "/api/v1/video-channels/" + channelId;
+        String url = "https://peertube2.cpy.re" + "/api/v1/video-channels/" + channelId;
         return restTemplate.getForObject(url, PTChannel.class);
     }
 
