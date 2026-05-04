@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-
+//TODO: clase requerida por Datum
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Language {
 

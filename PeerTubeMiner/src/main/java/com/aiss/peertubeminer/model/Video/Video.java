@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Video {
 
-    @JsonProperty("id")
+    @JsonProperty("id") // <--
     private Integer id;
     @JsonProperty("uuid")
     private String uuid;
@@ -20,7 +20,7 @@ public class Video {
     private Boolean isLive;
     @JsonProperty("liveSchedules")
     private List<LiveSchedule> liveSchedules;
-    @JsonProperty("createdAt")
+    @JsonProperty("createdAt") // <--
     private String createdAt;
     @JsonProperty("publishedAt")
     private String publishedAt;
@@ -44,7 +44,7 @@ public class Video {
     private Double aspectRatio;
     @JsonProperty("isLocal")
     private Boolean isLocal;
-    @JsonProperty("name")
+    @JsonProperty("name") // <--
     private String name;
     @JsonProperty("thumbnailPath")
     private String thumbnailPath;
@@ -86,7 +86,7 @@ public class Video {
     private UserHistory userHistory;
     @JsonProperty("viewers")
     private Integer viewers;
-    @JsonProperty("description")
+    @JsonProperty("description") // <--
     private String description;
     @JsonProperty("support")
     private String support;

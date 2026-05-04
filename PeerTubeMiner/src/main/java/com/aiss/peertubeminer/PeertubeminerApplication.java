@@ -11,6 +11,7 @@ public class PeertubeminerApplication {
 	}
 
 	@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder builder) {return builder.build();}
-
+	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+		return builder.build();
+	}
 }

@@ -12,26 +12,16 @@ public class Datum {
 
     @JsonProperty("id")
     private Integer id;
+
     @JsonProperty("url")
     private String url;
+
     @JsonProperty("text")
     private String text;
-    @JsonProperty("heldForReview")
-    private Boolean heldForReview;
-    @JsonProperty("threadId")
-    private Integer threadId;
-    @JsonProperty("inReplyToCommentId")
-    private Integer inReplyToCommentId;
+
     @JsonProperty("createdAt")
     private String createdAt;
-    @JsonProperty("updatedAt")
-    private String updatedAt;
-    @JsonProperty("account")
-    private Account account;
-    @JsonProperty("video")
-    private Video video;
-    @JsonProperty("automaticTags")
-    private List<String> automaticTags;
+
 
     @JsonProperty("id")
     public Integer getId() {
@@ -63,36 +53,6 @@ public class Datum {
         this.text = text;
     }
 
-    @JsonProperty("heldForReview")
-    public Boolean getHeldForReview() {
-        return heldForReview;
-    }
-
-    @JsonProperty("heldForReview")
-    public void setHeldForReview(Boolean heldForReview) {
-        this.heldForReview = heldForReview;
-    }
-
-    @JsonProperty("threadId")
-    public Integer getThreadId() {
-        return threadId;
-    }
-
-    @JsonProperty("threadId")
-    public void setThreadId(Integer threadId) {
-        this.threadId = threadId;
-    }
-
-    @JsonProperty("inReplyToCommentId")
-    public Integer getInReplyToCommentId() {
-        return inReplyToCommentId;
-    }
-
-    @JsonProperty("inReplyToCommentId")
-    public void setInReplyToCommentId(Integer inReplyToCommentId) {
-        this.inReplyToCommentId = inReplyToCommentId;
-    }
-
     @JsonProperty("createdAt")
     public String getCreatedAt() {
         return createdAt;
@@ -101,46 +61,6 @@ public class Datum {
     @JsonProperty("createdAt")
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
-    }
-
-    @JsonProperty("updatedAt")
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    @JsonProperty("updatedAt")
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    @JsonProperty("account")
-    public Account getAccount() {
-        return account;
-    }
-
-    @JsonProperty("account")
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
-    @JsonProperty("video")
-    public Video getVideo() {
-        return video;
-    }
-
-    @JsonProperty("video")
-    public void setVideo(Video video) {
-        this.video = video;
-    }
-
-    @JsonProperty("automaticTags")
-    public List<String> getAutomaticTags() {
-        return automaticTags;
-    }
-
-    @JsonProperty("automaticTags")
-    public void setAutomaticTags(List<String> automaticTags) {
-        this.automaticTags = automaticTags;
     }
 
     @Override

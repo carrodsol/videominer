@@ -16,30 +16,15 @@ public class Channel {
     private String url;
     @JsonProperty("name")
     private String name;
-    @JsonProperty("avatars")
-    private List<Avatar> avatars;
-    @JsonProperty("host")
-    private String host;
-    @JsonProperty("hostRedundancyAllowed")
-    private Boolean hostRedundancyAllowed;
-    @JsonProperty("followingCount")
-    private Integer followingCount;
-    @JsonProperty("followersCount")
-    private Integer followersCount;
+
     @JsonProperty("createdAt")
     private String createdAt;
-    @JsonProperty("updatedAt")
-    private String updatedAt;
+
     @JsonProperty("displayName")
     private String displayName;
     @JsonProperty("description")
     private String description;
-    @JsonProperty("support")
-    private String support;
-    @JsonProperty("isLocal")
-    private Boolean isLocal;
-    @JsonProperty("banners")
-    private List<Banner> banners;
+
     @JsonProperty("ownerAccount")
     private OwnerAccount ownerAccount;
 
@@ -53,15 +38,6 @@ public class Channel {
         this.id = id;
     }
 
-    @JsonProperty("url")
-    public String getUrl() {
-        return url;
-    }
-
-    @JsonProperty("url")
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     @JsonProperty("name")
     public String getName() {
@@ -71,56 +47,6 @@ public class Channel {
     @JsonProperty("name")
     public void setName(String name) {
         this.name = name;
-    }
-
-    @JsonProperty("avatars")
-    public List<Avatar> getAvatars() {
-        return avatars;
-    }
-
-    @JsonProperty("avatars")
-    public void setAvatars(List<Avatar> avatars) {
-        this.avatars = avatars;
-    }
-
-    @JsonProperty("host")
-    public String getHost() {
-        return host;
-    }
-
-    @JsonProperty("host")
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    @JsonProperty("hostRedundancyAllowed")
-    public Boolean getHostRedundancyAllowed() {
-        return hostRedundancyAllowed;
-    }
-
-    @JsonProperty("hostRedundancyAllowed")
-    public void setHostRedundancyAllowed(Boolean hostRedundancyAllowed) {
-        this.hostRedundancyAllowed = hostRedundancyAllowed;
-    }
-
-    @JsonProperty("followingCount")
-    public Integer getFollowingCount() {
-        return followingCount;
-    }
-
-    @JsonProperty("followingCount")
-    public void setFollowingCount(Integer followingCount) {
-        this.followingCount = followingCount;
-    }
-
-    @JsonProperty("followersCount")
-    public Integer getFollowersCount() {
-        return followersCount;
-    }
-
-    @JsonProperty("followersCount")
-    public void setFollowersCount(Integer followersCount) {
-        this.followersCount = followersCount;
     }
 
     @JsonProperty("createdAt")
@@ -133,15 +59,6 @@ public class Channel {
         this.createdAt = createdAt;
     }
 
-    @JsonProperty("updatedAt")
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    @JsonProperty("updatedAt")
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 
     @JsonProperty("displayName")
     public String getDisplayName() {
@@ -163,120 +80,12 @@ public class Channel {
         this.description = description;
     }
 
-    @JsonProperty("support")
-    public String getSupport() {
-        return support;
-    }
-
-    @JsonProperty("support")
-    public void setSupport(String support) {
-        this.support = support;
-    }
-
-    @JsonProperty("isLocal")
-    public Boolean getIsLocal() {
-        return isLocal;
-    }
-
-    @JsonProperty("isLocal")
-    public void setIsLocal(Boolean isLocal) {
-        this.isLocal = isLocal;
-    }
-
-    @JsonProperty("banners")
-    public List<Banner> getBanners() {
-        return banners;
-    }
-
-    @JsonProperty("banners")
-    public void setBanners(List<Banner> banners) {
-        this.banners = banners;
-    }
-
-    @JsonProperty("ownerAccount")
-    public OwnerAccount getOwnerAccount() {
-        return ownerAccount;
-    }
-
-    @JsonProperty("ownerAccount")
-    public void setOwnerAccount(OwnerAccount ownerAccount) {
-        this.ownerAccount = ownerAccount;
-    }
-
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Channel.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
-        sb.append("id");
-        sb.append('=');
-        sb.append(((this.id == null)?"<null>":this.id));
-        sb.append(',');
-        sb.append("url");
-        sb.append('=');
-        sb.append(((this.url == null)?"<null>":this.url));
-        sb.append(',');
-        sb.append("name");
-        sb.append('=');
-        sb.append(((this.name == null)?"<null>":this.name));
-        sb.append(',');
-        sb.append("avatars");
-        sb.append('=');
-        sb.append(((this.avatars == null)?"<null>":this.avatars));
-        sb.append(',');
-        sb.append("host");
-        sb.append('=');
-        sb.append(((this.host == null)?"<null>":this.host));
-        sb.append(',');
-        sb.append("hostRedundancyAllowed");
-        sb.append('=');
-        sb.append(((this.hostRedundancyAllowed == null)?"<null>":this.hostRedundancyAllowed));
-        sb.append(',');
-        sb.append("followingCount");
-        sb.append('=');
-        sb.append(((this.followingCount == null)?"<null>":this.followingCount));
-        sb.append(',');
-        sb.append("followersCount");
-        sb.append('=');
-        sb.append(((this.followersCount == null)?"<null>":this.followersCount));
-        sb.append(',');
-        sb.append("createdAt");
-        sb.append('=');
-        sb.append(((this.createdAt == null)?"<null>":this.createdAt));
-        sb.append(',');
-        sb.append("updatedAt");
-        sb.append('=');
-        sb.append(((this.updatedAt == null)?"<null>":this.updatedAt));
-        sb.append(',');
-        sb.append("displayName");
-        sb.append('=');
-        sb.append(((this.displayName == null)?"<null>":this.displayName));
-        sb.append(',');
-        sb.append("description");
-        sb.append('=');
-        sb.append(((this.description == null)?"<null>":this.description));
-        sb.append(',');
-        sb.append("support");
-        sb.append('=');
-        sb.append(((this.support == null)?"<null>":this.support));
-        sb.append(',');
-        sb.append("isLocal");
-        sb.append('=');
-        sb.append(((this.isLocal == null)?"<null>":this.isLocal));
-        sb.append(',');
-        sb.append("banners");
-        sb.append('=');
-        sb.append(((this.banners == null)?"<null>":this.banners));
-        sb.append(',');
-        sb.append("ownerAccount");
-        sb.append('=');
-        sb.append(((this.ownerAccount == null)?"<null>":this.ownerAccount));
-        sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
-        } else {
-            sb.append(']');
-        }
-        return sb.toString();
+        return "Channel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
-
 }

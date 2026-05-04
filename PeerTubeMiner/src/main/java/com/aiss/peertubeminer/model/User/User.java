@@ -10,9 +10,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
-    @JsonProperty("id")
+    @JsonProperty("id") // <--
     private Integer id;
-    @JsonProperty("username")
+    @JsonProperty("username")// <--
     private String username;
     @JsonProperty("email")
     private String email;
