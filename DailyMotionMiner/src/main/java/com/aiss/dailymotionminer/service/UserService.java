@@ -21,10 +21,13 @@ public class UserService {
     @Value("${DailyMotionMiner.userFields}")
     private String fields;
 
-    //Encuentra el usuario de un video en concreto
+    // Encuentra el usuario de un video en concreto
     // GET https://api.dailymotion.com/video/:id?fields=owner.id,owner.username,owner.url,owner.avatar_720_url;
     public User findUserByVideoId(String videoId) {
         String url = this.baseUri + "/video/" + videoId + fields;
         return restTemplate.getForObject(url, User.class);
     }
+
+
+
 }

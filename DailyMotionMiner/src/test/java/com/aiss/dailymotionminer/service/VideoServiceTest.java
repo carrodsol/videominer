@@ -34,4 +34,10 @@ class VideoServiceTest {
         assertFalse(listaVideos.isEmpty());
         System.out.println("listaVideos: " + listaVideos);
     }
+
+    @Test
+    void findVideoById() {
+        Video video = videoService.findVideoById("xa7vgfi");
+        System.out.println("video: " + video);
+    }
 }
