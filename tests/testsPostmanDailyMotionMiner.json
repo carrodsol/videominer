@@ -1,0 +1,43 @@
+{
+  "info": {
+    "_postman_id": "ad6e3338-9739-461d-96ea-e8c9969216bb",
+    "name": "DailyMotionMiner Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51807862",
+    "_collection_link": "https://go.postman.co/collection/51807862-ad6e3338-9739-461d-96ea-e8c9969216bb?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "GET Videos",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "GET Canales",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "GET Canales negativo 1",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "GET Canales negativo 2",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}

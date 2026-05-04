@@ -12,10 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -26,16 +24,12 @@ public class VideoController {
 
     private final VideoService videoService;
     private final VideoETL videoETL;
-    private final RestTemplate restTemplate;
 
-    @Value("${VideoMiner.uri}")
-    private String videoMinerUri;
 
     @Autowired
-    public VideoController(VideoService videoService, VideoETL videoETL, RestTemplate restTemplate) {
+    public VideoController(VideoService videoService, VideoETL videoETL) {
         this.videoService = videoService;
         this.videoETL = videoETL;
-        this.restTemplate = restTemplate;
     }
 
     @Operation(
@@ -61,26 +55,4 @@ public class VideoController {
         return video.stream().map(videoETL::transform).toList();
     }
 
-    @Operation(
-            summary = "Exportar lista de vídeos a VideoMiner",
-            description = "Envía la lista de los últimos vídeos transformados a la API de VideoMiner para su almacenamiento.",
-            tags = {"videos", "post"})
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Vídeos exportados con éxito", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "400", description = "Parámetros incorrectos",
-                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"Parámetros incorrecto de búsqueda\"}"), mediaType = "application/json")),
-            @ApiResponse(responseCode = "500", description = "Error interno",
-                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"Error interno del servidor\"}"), mediaType = "application/json"))
-    })
-    @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public List<VMVideo> sendToVideoMiner(
-            @Parameter(description = "Número máximo de vídeos a exportar", example = "10")
-            @RequestParam(defaultValue = "10") Integer maxVideos,
-            @Parameter(description = "Número máximo de páginas a exportar", example = "2")
-            @RequestParam(defaultValue = "2") Integer maxPages) {
-        List<VMVideo> videos = getVideos(maxVideos, maxPages);
-        videos.forEach(v -> restTemplate.postForObject(videoMinerUri + "/videominer/videos", v, VMVideo.class));
-        return videos;
-    }
 }

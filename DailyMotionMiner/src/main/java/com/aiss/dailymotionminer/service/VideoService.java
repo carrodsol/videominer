@@ -5,7 +5,6 @@ import com.aiss.dailymotionminer.model.dailymotion.Video;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -30,10 +29,12 @@ public class VideoService {
         List<Video> videos = new ArrayList<>();
         int page = 1;
         boolean hasMore = true;
-        while (hasMore && (page <= maxPages)) {
-            String url = this.baseUri + "/videos" + fields + "&limit=" + maxVideos + "&page=" + page;
+        while (hasMore && (page <= maxPages) && (videos.size() < maxVideos)) {
+            int limit = Math.min(maxVideos - videos.size(), maxVideos);
+            String url = this.baseUri + "/videos" + fields + "&limit=" + limit + "&page=" + page;
                 InfoPaginacionVideo listaVideos = restTemplate.getForObject(url, InfoPaginacionVideo.class);
-                videos.addAll(listaVideos.getVideos());
+            assert listaVideos != null;
+            videos.addAll(listaVideos.getVideos());
                 hasMore = listaVideos.getHasMore();
                 page++;
         }
@@ -45,10 +46,12 @@ public class VideoService {
         List<Video> videos = new ArrayList<>();
         int page = 1;
         boolean hasMore = true;
-        while (hasMore && (page <= maxPages)) {
-            String url = this.baseUri + "/videos" + fields + "&limit=" + maxVideos + "&page=" + page + "&channel=" + channelId;
+        while (hasMore && (page <= maxPages) && (videos.size() < maxVideos)) {
+            int limit = Math.min(maxVideos - videos.size(), maxVideos);
+            String url = this.baseUri + "/videos" + fields + "&limit=" + limit + "&page=" + page + "&channel=" + channelId;
                 InfoPaginacionVideo listaVideos = restTemplate.getForObject(url, InfoPaginacionVideo.class);
-                videos.addAll(listaVideos.getVideos());
+            assert listaVideos != null;
+            videos.addAll(listaVideos.getVideos());
                 hasMore = listaVideos.getHasMore();
                 page++;
         }
@@ -57,8 +60,7 @@ public class VideoService {
 
     // Encuentra video por ID
     public Video findVideoById(String videoId) {
-        Video video = restTemplate.getForObject(this.baseUri + "/video/" + videoId + "/" + fields, Video.class);
-        return video;
+        return restTemplate.getForObject(this.baseUri + "/video/" + videoId + "/" + fields, Video.class);
     }
 
 
