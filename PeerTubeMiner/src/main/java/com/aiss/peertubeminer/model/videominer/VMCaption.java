@@ -1,4 +1,4 @@
-package aiss.videominer.model;
+package com.aiss.peertubeminer.model.videominer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "Caption")
-public class Caption {
+public class VMCaption {
 
     @Id
     @JsonProperty("id")

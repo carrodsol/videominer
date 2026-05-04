@@ -1,15 +1,14 @@
-package aiss.videominer.model;
+package com.aiss.peertubeminer.model.videominer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author Juan C. Alonso
  */
 @Entity
 @Table(name = "Comment")
-public class Comment {
+public class VMComment {
 
     @Id
     @JsonProperty("id")

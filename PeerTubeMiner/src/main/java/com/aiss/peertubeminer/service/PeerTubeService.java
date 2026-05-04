@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class PeerTubeService {
@@ -35,4 +34,10 @@ public class PeerTubeService {
       String url = baseUrl + "/api/v1/videos/" + videoUuid + "/comment-threads?count=" + maxComments;
         return restTemplate.getForObject(url, PTCommentList.class);
     }
+
+    public PTAccount getAccount(String userUuid) {
+      String url = baseUrl + "api/v1/users/" + userUuid;
+        return restTemplate.getForObject(url, PTAccount.class);
+    }
+
 }

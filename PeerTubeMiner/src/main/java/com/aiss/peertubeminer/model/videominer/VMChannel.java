@@ -1,4 +1,4 @@
-package aiss.videominer.model;
+package com.aiss.peertubeminer.model.videominer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "Channel")
-public class Channel {
+public class VMChannel {
 
     @Id
     @JsonProperty("id")
@@ -35,10 +35,18 @@ public class Channel {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "channelId")
     @NotNull(message = "Channel videos cannot be null")
-    private List<Video> videos;
+    private List<VMVideo> videos;
 
-    public Channel() {
+    public VMChannel() {
         this.videos = new ArrayList<>();
+    }
+
+    public VMChannel(String id, List<VMVideo> videos, String createdTime, String description, String name) {
+        this.id = id;
+        this.videos = videos;
+        this.createdTime = createdTime;
+        this.description = description;
+        this.name = name;
     }
 
     public String getId() {
@@ -73,11 +81,11 @@ public class Channel {
         this.createdTime = createdTime;
     }
 
-    public List<Video> getVideos() {
+    public List<VMVideo> getVideos() {
         return videos;
     }
 
-    public void setVideos(List<Video> videos) {
+    public void setVideos(List<VMVideo> videos) {
         this.videos = videos;
     }
 
