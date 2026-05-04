@@ -16,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+//TODO: Documentar servicio con Swagger
+
 @RestController
 // Por ejemplo. Ahora mismo se inicia todo en localhost:8081.
 @Tag(name = "Video", description = "API encargada del manejo de videos de DailyMotion")

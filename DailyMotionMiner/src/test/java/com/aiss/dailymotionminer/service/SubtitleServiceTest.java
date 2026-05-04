@@ -1,5 +1,6 @@
 package com.aiss.dailymotionminer.service;
 
+import com.aiss.dailymotionminer.model.dailymotion.InfoPaginacionSubtitles;
 import com.aiss.dailymotionminer.model.dailymotion.Subtitles;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ class SubtitleServiceTest {
     @DisplayName("Obtiene los subtítulos de un vídeo")
     void findSubtitlesByVideoId() {
         // Este video no tiene subtítulos
-        Subtitles subtitles = subtitleService.findSubtitlesByVideoId("xa7vgfi");
+        InfoPaginacionSubtitles subtitles = subtitleService.findSubtitlesByVideoId("xa7vgfi");
         assertNotNull(subtitles);
         System.out.println(subtitles);
     }
