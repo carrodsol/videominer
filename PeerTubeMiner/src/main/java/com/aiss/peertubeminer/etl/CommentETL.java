@@ -1,5 +1,5 @@
 package com.aiss.peertubeminer.etl;
 
-public class CommentETL
-{
+public class CommentETL {
+    //TODO: FINISH ETL
 }

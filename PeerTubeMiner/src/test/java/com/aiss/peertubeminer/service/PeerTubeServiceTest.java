@@ -53,7 +53,7 @@ class PeerTubeServiceTest {
     @Test
     @DisplayName("Obtener usuario")
     void getAccount() {
-        PTAccount account = service.getAccount("4567");
+        PTAccount account = service.getAccount("peertube");
         assertNotNull(account);
         System.out.println(account);
 

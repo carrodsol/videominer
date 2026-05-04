@@ -35,8 +35,8 @@ public class PeerTubeService {
         return restTemplate.getForObject(url, PTCommentList.class);
     }
 
-    public PTAccount getAccount(String userUuid) {
-      String url = baseUrl + "api/v1/users/" + userUuid;
+    public PTAccount getAccount(String accountName) {
+      String url = baseUrl + "api/v1/accounts/" + accountName;
         return restTemplate.getForObject(url, PTAccount.class);
     }
 
