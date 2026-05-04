@@ -26,4 +26,6 @@ public class SubtitleService {
         String url = this.baseUri + "/video/" + videoId + "/subtitles" + fields;
         return restTemplate.getForObject(url, Subtitles.class);
     }
+
+
 }
