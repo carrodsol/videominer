@@ -33,6 +33,6 @@ public class CaptionETL {
         return vmCaptions;
     }
 
-    // TODO: FIX ETL
+
 
 }
