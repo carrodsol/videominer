@@ -1,9 +1,8 @@
 package com.aiss.peertubeminer.etl;
 
-import com.aiss.peertubeminer.model.peertube.PTCaptionDatum;
 import com.aiss.peertubeminer.model.peertube.PTCommentDatum;
 import com.aiss.peertubeminer.model.videominer.VMComment;
-import com.aiss.peertubeminer.service.PeerTubeService;
+import com.aiss.peertubeminer.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +12,10 @@ import java.util.List;
 @Component
 public class CommentETL {
 
-    private final PeerTubeService commentService;
+    private final CommentService commentService;
 
     @Autowired
-    public CommentETL(PeerTubeService commentService) {
+    public CommentETL(CommentService commentService) {
         this.commentService = commentService;
     }
 
