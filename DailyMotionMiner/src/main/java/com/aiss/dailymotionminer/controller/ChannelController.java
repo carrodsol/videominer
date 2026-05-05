@@ -86,7 +86,7 @@ public class ChannelController {
             @RequestParam(defaultValue = "2") Integer maxPages) {
 
         VMChannel channel = getChannelById(id, maxVideos, maxPages);
-        restTemplate.postForObject(videoMinerUri + "/videominer/channels", channel, VMChannel.class);
+        restTemplate.postForObject(videoMinerUri + "/channels", channel, VMChannel.class);
 
         return channel;
     }
