@@ -26,7 +26,7 @@ public class VMVideo {
     @NotEmpty(message = "Video release time cannot be empty")
     private String releaseTime;
 
-    @JsonProperty("VMUser")
+    @JsonProperty("user")
     private VMUser author;
 
     @JsonProperty("comments")
