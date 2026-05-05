@@ -17,6 +17,6 @@ public class UserETL {
     }
     public VMUser transform(String videoId) {
         User owner = userService.findUserByVideoId(videoId);
-        return new VMUser(owner.getAvatar720Url(), owner.getUrl(), owner.getUsername(), owner.getId());
+        return new VMUser(owner.getAvatar720Url(), owner.getUrl(), owner.getUsername(), null);
     }
 }

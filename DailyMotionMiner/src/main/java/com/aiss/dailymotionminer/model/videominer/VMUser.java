@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class VMUser {
 
     @JsonProperty("id")
-    private String id;
+    private Long id;
 
     @JsonProperty("name")
     private String name;
@@ -20,11 +20,11 @@ public class VMUser {
     @JsonProperty("picture_link")
     private String picture_link;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -62,7 +62,7 @@ public class VMUser {
                 '}';
     }
 
-    public VMUser(String picture_link, String user_link, String name, String id) {
+    public VMUser(String picture_link, String user_link, String name, Long id) {
         this.picture_link = picture_link;
         this.user_link = user_link;
         this.name = name;
