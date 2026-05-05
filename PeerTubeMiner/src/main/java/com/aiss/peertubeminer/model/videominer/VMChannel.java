@@ -11,30 +11,22 @@ import java.util.List;
 /**
  * @author Juan C. Alonso
  */
-@Entity
-@Table(name = "Channel")
+
 public class VMChannel {
 
-    @Id
     @JsonProperty("id")
     private String id;
 
     @JsonProperty("name")
-    @NotEmpty(message = "Channel name cannot be empty")
     private String name;
 
     @JsonProperty("description")
-    @Column(columnDefinition="TEXT")
     private String description;
 
     @JsonProperty("createdTime")
-    @NotEmpty(message = "Channel creation time cannot be empty")
     private String createdTime;
 
     @JsonProperty("videos")
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "channelId")
-    @NotNull(message = "Channel videos cannot be null")
     private List<VMVideo> videos;
 
     public VMChannel() {
