@@ -9,35 +9,291 @@
   "item": [
     {
       "name": "GET Videos",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"El código de estado es 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "\r",
+              "pm.test(\"Todos los vídeos deben tener todas las propiedades\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    for(var i=0; i < jsonData.length; i++) {\r",
+              "        pm.expect(jsonData[i]).to.have.property(\"id\");\r",
+              "        pm.expect(jsonData[i]).to.have.property(\"name\")\r",
+              "        pm.expect(jsonData[i]).to.have.property(\"description\")\r",
+              "        pm.expect(jsonData[i]).to.have.property(\"user\")\r",
+              "        pm.expect(jsonData[i]).to.have.property(\"releaseTime\")\r",
+              "        pm.expect(jsonData[i]).to.have.property(\"comments\")\r",
+              "        pm.expect(jsonData[i]).to.have.property(\"captions\")\r",
+              "    }\r",
+              "});\r",
+              "\r",
+              "var maxVideos = parseInt(pm.request.url.query.get(\"maxVideos\")) || 10;\r",
+              "var maxPages = parseInt(pm.request.url.query.get(\"maxPages\")) || 2;\r",
+              "const limite = maxPages * 100; // Limite DailyMotion = 100\r",
+              "pm.test(`Validar límites: Solicitado ${maxVideos}, Máx Páginas ${maxPages} (Capacidad: ${limite} páginas como máximo)`, function () {\r",
+              "     \r",
+              "    const expectedMax = Math.min(maxVideos, limite);\r",
+              "    var jsonData = pm.response.json();\r",
+              "    var actualCount = jsonData.length;\r",
+              "\r",
+              "    // Crítica: El tamaño de la lista NO debe superar el esperado\r",
+              "    pm.expect(actualCount).to.be.at.most(expectedMax, \r",
+              "        `El servidor devolvió ${actualCount} vídeos, pero el límite combinado debería ser ${expectedMax}`);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"La estructura de user es correcta\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    \r",
+              "    jsonData.forEach(function(video) {\r",
+              "        var user = video.user;\r",
+              "        pm.expect(user.name).to.be.a('string').and.not.empty;\r",
+              "        pm.expect(user.user_link).to.be.a('string').and.include('https://');\r",
+              "        pm.expect(user.picture_link).to.be.a('string').and.include('https://');\r",
+              "    });\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Los tipos de datos del vídeo son correcos\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    jsonData.forEach(function(video) {\r",
+              "        pm.expect(video.id).to.be.a('string');\r",
+              "        pm.expect(video.name).to.be.a('string').and.not.empty;\r",
+              "        pm.expect(video.description).to.be.a('string');\r",
+              "        pm.expect(video.releaseTime).to.be.a('string');\r",
+              "        \r",
+              "        // Validación de objetos anidados y arrays\r",
+              "        pm.expect(video.user).to.be.an('object');\r",
+              "        pm.expect(video.comments).to.be.an('array');\r",
+              "        pm.expect(video.captions).to.be.an('array');\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "GET",
-        "header": []
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/DailyMotion/api/v1/videos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "DailyMotion",
+            "api",
+            "v1",
+            "videos"
+          ]
+        }
       },
       "response": []
     },
     {
       "name": "GET Canales",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Estado es 200 OK\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"El cuerpo contiene un canal válido\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.id).to.eql(\"shortfilms\");\r",
+              "    pm.expect(jsonData.videos).to.be.an('array');\r",
+              "    pm.expect(jsonData.name).to.be.a('string');\r",
+              "    pm.expect(jsonData.createdTime).to.exist;\r",
+              "});\r",
+              "\r",
+              "var maxVideos = parseInt(pm.request.url.query.get(\"maxVideos\")) || 10;\r",
+              "var maxPages = parseInt(pm.request.url.query.get(\"maxPages\")) || 2;\r",
+              "const limite = maxPages * 100; // Limite DailyMotion = 100\r",
+              "pm.test(`Validar límites: Solicitado ${maxVideos}, Máx Páginas ${maxPages} (Capacidad: ${limite} páginas como máximo)`, function () {\r",
+              "     \r",
+              "    const expectedMax = Math.min(maxVideos, limite);\r",
+              "    var jsonData = pm.response.json();\r",
+              "    var actualCount = jsonData.videos.length;\r",
+              "\r",
+              "    // Crítica: El tamaño de la lista NO debe superar el esperado\r",
+              "    pm.expect(actualCount).to.be.at.most(expectedMax, \r",
+              "        `El servidor devolvió ${actualCount} vídeos, pero el límite combinado debería ser ${expectedMax}`);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Cada vídeo dentro del canal cumple el modelo VMVideo\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    \r",
+              "    jsonData.videos.forEach(function(video, index) {\r",
+              "        pm.expect(video.id).to.be.a('string').and.not.empty;\r",
+              "        pm.expect(video.name).to.be.a('string').and.not.empty;\r",
+              "        pm.expect(video.releaseTime).to.be.a('string');\r",
+              "        pm.expect(video.comments).to.be.an('array');\r",
+              "        pm.expect(video.captions).to.be.an('array');\r",
+              "        pm.test(`El autor del vídeo ${video.id} es válido`, function () {\r",
+              "            var user = video.user;\r",
+              "            pm.expect(user).to.be.an('object');\r",
+              "            pm.expect(user.name).to.be.a('string').and.not.empty;\r",
+              "            pm.expect(user.user_link).to.be.a('string').and.include('https://');\r",
+              "            pm.expect(user.picture_link).to.be.a('string').and.include('https://');\r",
+              "        });\r",
+              "    });\r",
+              "});\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "GET",
-        "header": []
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/DailyMotion/api/v1/channels/shortfilms?maxPages=2&maxVideos=10",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "DailyMotion",
+            "api",
+            "v1",
+            "channels",
+            "shortfilms"
+          ],
+          "query": [
+            {
+              "key": "maxPages",
+              "value": "2"
+            },
+            {
+              "key": "maxVideos",
+              "value": "10"
+            }
+          ]
+        }
       },
       "response": []
     },
     {
       "name": "GET Canales negativo 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"El código de estado es 404\", function () {\r",
+              "    pm.response.to.have.status(404);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "GET",
-        "header": []
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/DailyMotion/api/v1/channels/patatas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "DailyMotion",
+            "api",
+            "v1",
+            "channels",
+            "patatas"
+          ]
+        }
       },
       "response": []
     },
     {
       "name": "GET Canales negativo 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"El código de estado es 400\", function () {\r",
+              "    pm.response.to.have.status(400);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "GET",
-        "header": []
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/DailyMotion/api/v1/channels/shortfilms?maxPages=a",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "DailyMotion",
+            "api",
+            "v1",
+            "channels",
+            "shortfilms"
+          ],
+          "query": [
+            {
+              "key": "maxPages",
+              "value": "a"
+            }
+          ]
+        }
       },
       "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
     }
   ]
 }
