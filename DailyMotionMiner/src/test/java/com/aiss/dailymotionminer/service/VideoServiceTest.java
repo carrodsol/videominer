@@ -47,6 +47,8 @@ class VideoServiceTest {
     @DisplayName("Encuentra videos por ID")
     void findVideoByIdPositive() {
         Video video = videoService.findVideoById("xa7ksfk");
+        assertNotNull(video);
+        assertNotNull(video.getId());
         System.out.println("video: " + video);
     }
     @Test
