@@ -13,15 +13,21 @@ import java.util.List;
 @Component
 public class ChannelETL {
 
-    private final ChannelService service;
+    private final ChannelService channelService;
+    private final VideoETL videoETL;
 
-        @Autowired
-        public ChannelETL(ChannelService service) {
-            this.service = service;
-        }
-
-        public VMChannel transform(List<VMVideo> videos, String channelId) {
-            PTChannel channel = service.getChannelById(channelId);
-            return new VMChannel(channelId, videos, channel.getCreatedTime().toString(), channel.getDescription(), channel.getName());
-        }
+    @Autowired
+    public ChannelETL(ChannelService channelService, VideoETL videoETL) {
+        this.channelService = channelService;
+        this.videoETL = videoETL;
     }
+
+    public VMChannel transform(String channelId, int maxVideos, int maxComments) {
+        PTChannel channel = channelService.getChannelById(channelId);
+
+        // Delegamos a VideoETL la responsabilidad de usar maxVideos y maxComments
+        List<VMVideo> vmVideos = videoETL.transform(channelId, maxVideos, maxComments);
+
+        return new VMChannel(channelId, vmVideos, channel.getCreatedTime().toString(), channel.getDescription(), channel.getName());
+    }
+}
