@@ -23,11 +23,13 @@ public class CaptionETL {
     public List<VMCaption> transform(String videoId) {
         List<PTCaptionDatum> captions = captionService.getCaptions(videoId).getData();
         List<VMCaption> vmCaptions = new ArrayList<>();
-        captions.forEach(caption -> vmCaptions.add(new VMCaption(
-                caption.getLanguage().getId(),
-                caption.getLanguage().getLabel(),
-                caption.getLink()
-        )));
+        captions.forEach(ptCaption -> {
+            VMCaption caption = new VMCaption();
+            caption.setId( ptCaption.getLanguage().getId());
+            caption.setName(ptCaption.getLanguage().getLabel());
+            caption.setLanguage(ptCaption.getLanguage().getId());
+            vmCaptions.add(caption);
+        });
         return vmCaptions;
     }
 
