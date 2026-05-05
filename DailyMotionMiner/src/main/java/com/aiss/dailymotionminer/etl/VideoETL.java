@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class VideoETL {
@@ -23,10 +24,31 @@ public class VideoETL {
         this.subtitlesETL = subtitlesETL;
         this.commentETL = commentETL;
     }
-    public VMVideo transform(Video video) {
-        VMUser vmUser = userETL.transform(video.getId());
-        List<VMComment> vmComments = commentETL.transform(video.getId());
-        List<VMCaption> vmCaptions = subtitlesETL.transform(video.getId());
-        return new VMVideo(video.getId(), video.getTitle(), video.getDescription(), vmUser, video.getCreatedTime().toString(), vmComments, vmCaptions);
+
+    // https://spring.io/guides/gs/async-method Usamos asincronía porque luego cada transform hace llamadas a la API
+    // Antes eran muy lentas, ahora carga más rápido
+    public CompletableFuture<VMVideo> transform(Video video) {
+        CompletableFuture<VMUser> vmUser = userETL.transform(video.getId());
+
+        CompletableFuture<List<VMComment>> vmComments = commentETL.transform(video.getId());
+
+        CompletableFuture<List<VMCaption>> vmCaptions = subtitlesETL.transform(video.getId());
+
+        return CompletableFuture.allOf(vmUser, vmComments, vmCaptions)
+                .thenApply(v -> {
+                    VMUser user = vmUser.join();
+                    List<VMComment> comments = vmComments.join();
+                    List<VMCaption> captions = vmCaptions.join();
+
+                    return new VMVideo(
+                            video.getId(),
+                            video.getTitle(),
+                            video.getDescription(),
+                            user,
+                            video.getCreatedTime().toString(),
+                            comments,
+                            captions
+                    );
+                });
     }
 }

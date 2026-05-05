@@ -2,13 +2,14 @@ package com.aiss.dailymotionminer.etl;
 
 import com.aiss.dailymotionminer.model.dailymotion.Video;
 import com.aiss.dailymotionminer.model.videominer.VMComment;
-import com.aiss.dailymotionminer.service.SubtitleService;
 import com.aiss.dailymotionminer.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class CommentETL {
@@ -18,7 +19,9 @@ public class CommentETL {
     public CommentETL(VideoService videoService) {
         this.videoService = videoService;
     }
-    public List<VMComment> transform(String videoId) {
+
+    @Async
+    public CompletableFuture<List<VMComment>> transform(String videoId) {
         Video video = videoService.findVideoById(videoId);
         List<String> comments = video.getTags();
         List<VMComment> vmComments = new ArrayList<>();
@@ -33,6 +36,6 @@ public class CommentETL {
                     )
             );
         }
-        return vmComments;
+        return CompletableFuture.completedFuture(vmComments);
     }
 }

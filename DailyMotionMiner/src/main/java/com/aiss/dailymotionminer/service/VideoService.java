@@ -30,8 +30,9 @@ public class VideoService {
         int page = 1;
         boolean hasMore = true;
         while (hasMore && (page <= maxPages) && (videos.size() < maxVideos)) {
-            int limit = Math.min(maxVideos - videos.size(), maxVideos);
-            String url = this.baseUri + "/videos" + fields + "&limit=" + limit + "&page=" + page;
+            int remaining = maxVideos - videos.size();
+            int limitToRequest = Math.min(remaining, 100);
+            String url = this.baseUri + "/videos" + fields + "&limit=" + limitToRequest + "&page=" + page;
                 InfoPaginacionVideo listaVideos = restTemplate.getForObject(url, InfoPaginacionVideo.class);
             assert listaVideos != null;
             videos.addAll(listaVideos.getVideos());
@@ -47,8 +48,9 @@ public class VideoService {
         int page = 1;
         boolean hasMore = true;
         while (hasMore && (page <= maxPages) && (videos.size() < maxVideos)) {
-            int limit = Math.min(maxVideos - videos.size(), maxVideos);
-            String url = this.baseUri + "/videos" + fields + "&limit=" + limit + "&page=" + page + "&channel=" + channelId;
+            int remaining = maxVideos - videos.size();
+            int limitToRequest = Math.min(remaining, 100);
+            String url = this.baseUri + "/videos" + fields + "&limit=" + limitToRequest + "&page=" + page + "&channel=" + channelId;
                 InfoPaginacionVideo listaVideos = restTemplate.getForObject(url, InfoPaginacionVideo.class);
             assert listaVideos != null;
             videos.addAll(listaVideos.getVideos());

@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @Tag(name = "Video", description = "API encargada del manejo de videos de DailyMotion")
@@ -52,7 +53,9 @@ public class VideoController {
             @RequestParam(defaultValue = "2") Integer maxPages
     ) {
         List<Video> video = videoService.findAllVideos(maxVideos, maxPages);
-        return video.stream().map(videoETL::transform).toList();
+        // Gestionamos asincronia de forma separada. Al principio, se consiguen todas las "promesas" y luego ya se obtienen sus valores.
+        List<CompletableFuture<VMVideo>> videosAsync = video.stream().map(videoETL::transform).toList();
+        return videosAsync.stream().map(CompletableFuture::join).toList();
     }
 
 }

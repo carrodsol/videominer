@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 // Ruta: localhost:8081/DailyMotion/api/v1/channels/{id}
@@ -60,9 +61,13 @@ public class ChannelController {
             @RequestParam(defaultValue = "10") Integer maxVideos,
             @RequestParam(defaultValue = "2") Integer maxPages) {
 
-        List<VMVideo> videos = videoService.findAllVideosByChannelId(id, maxVideos, maxPages)
+        List<CompletableFuture<VMVideo>> videosAsync = videoService.findAllVideosByChannelId(id, maxVideos, maxPages)
                 .stream()
                 .map(videoETL::transform)
+                .toList();
+        // Gestionamos asincronia de forma separada. Al principio, se consiguen todas las "promesas" y luego ya se obtienen sus valores.
+        List<VMVideo> videos = videosAsync.stream()
+                .map(CompletableFuture::join)
                 .toList();
 
         return channelETL.transform(videos, id);
