@@ -60,7 +60,7 @@ public class VideoService {
 
     // Encuentra video por ID
     public Video findVideoById(String videoId) {
-        return restTemplate.getForObject(this.baseUri + "/video/" + videoId + "/" + fields, Video.class);
+        return restTemplate.getForObject(this.baseUri + "/video/" + videoId + fields, Video.class);
     }
 
 
