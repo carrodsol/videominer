@@ -52,9 +52,9 @@ public class VideoController {
             @Parameter(description = "Número máximo de páginas de resultados a consultar", example = "2")
             @RequestParam(defaultValue = "2") Integer maxPages
     ) {
-        List<Video> video = videoService.findAllVideos(maxVideos, maxPages);
+        List<Video> videos = videoService.findAllVideos(maxVideos, maxPages);
         // Gestionamos asincronia de forma separada. Al principio, se consiguen todas las "promesas" y luego ya se obtienen sus valores.
-        List<CompletableFuture<VMVideo>> videosAsync = video.stream().map(videoETL::transform).toList();
+        List<CompletableFuture<VMVideo>> videosAsync = videos.stream().map(videoETL::transform).toList();
         return videosAsync.stream().map(CompletableFuture::join).toList();
     }
 
