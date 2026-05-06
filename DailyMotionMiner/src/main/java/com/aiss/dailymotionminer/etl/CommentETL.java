@@ -20,7 +20,7 @@ public class CommentETL {
         this.videoService = videoService;
     }
 
-    @Async
+    @Async("etlExecutor")
     public CompletableFuture<List<VMComment>> transform(String videoId) {
         Video video = videoService.findVideoById(videoId);
         List<String> comments = video.getTags();

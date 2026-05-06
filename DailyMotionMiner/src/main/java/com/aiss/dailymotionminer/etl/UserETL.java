@@ -19,7 +19,7 @@ public class UserETL {
         this.userService = userService;
     }
 
-    @Async
+    @Async("etlExecutor")
     public CompletableFuture<VMUser> transform(String videoId) {
         User owner = userService.findUserByVideoId(videoId);
         return CompletableFuture.completedFuture(new VMUser(owner.getAvatar720Url(), owner.getUrl(), owner.getUsername(), null));

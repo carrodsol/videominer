@@ -22,7 +22,7 @@ public class SubtitlesETL {
         this.subtitleService = subtitleService;
     }
 
-    @Async
+    @Async("etlExecutor")
     public CompletableFuture<List<VMCaption>> transform(String videoId) {
         List<Subtitles> subtitles = subtitleService.findSubtitlesByVideoId(videoId).getSubtitles();
         List<VMCaption> vmCaptions = new ArrayList<>();
