@@ -17,7 +17,7 @@ public class UserETL {
     @Async("etlExecutor")
     public CompletableFuture<VMUser> transform(PTAccount account) {
         if (account == null) {
-            return null;
+            return CompletableFuture.completedFuture(null);
         }
         VMUser vmUser = new VMUser();
         vmUser.setName(account.getName());
