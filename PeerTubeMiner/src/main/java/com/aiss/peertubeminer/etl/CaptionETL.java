@@ -37,7 +37,7 @@ public class CaptionETL {
                 caption.setLanguage(ptCaption.getLanguage().getId());
             
             vmCaptions.add(caption);
-        });
+        }});
         return vmCaptions;
     }
 

@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 public class VMUser {
 
     @JsonProperty("id")
-    private String id;
+    private Long id;
 
     @JsonProperty("name")
     private String name;
@@ -21,11 +21,11 @@ public class VMUser {
     @JsonProperty("picture_link")
     private String picture_link;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
