@@ -34,7 +34,7 @@ public class ChannelController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Canal obtenido con éxito", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Parámetros incorrectos",
-                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"Parámetros incorrecto de búsqueda\"}"), mediaType = "application/json")),
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"Parámetros incorrectos de búsqueda\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Recurso no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"El recurso solicitado no existe en PeerTube\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",
@@ -53,7 +53,7 @@ public class ChannelController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Canal exportado con éxito", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Parámetros incorrectos",
-                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"Parámetros incorrecto de búsqueda\"}"), mediaType = "application/json")),
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"Parámetros incorrectos de búsqueda\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Recurso no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"El recurso solicitado no existe en PeerTube\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",
