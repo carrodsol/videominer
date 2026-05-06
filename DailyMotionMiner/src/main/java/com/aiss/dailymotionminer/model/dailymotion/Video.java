@@ -31,8 +31,12 @@ public class Video {
     private String channel;
     @JsonProperty("tags")
     private List<String> tags;
-    @JsonProperty("owner")
-    private String owner;
+    @JsonProperty("owner.username")
+    private String ownerUsername;
+    @JsonProperty("owner.url")
+    private String ownerUrl;
+    @JsonProperty("owner.avatar_720_url")
+    private String ownerAvatar720Url;
 
     @JsonProperty("id")
     public String getId() {
@@ -94,16 +98,6 @@ public class Video {
         this.tags = tags;
     }
 
-    @JsonProperty("owner")
-    public String getOwner() {
-        return owner;
-    }
-
-    @JsonProperty("owner")
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
     @Override
     public String toString() {
         return "Video{" +
@@ -113,7 +107,33 @@ public class Video {
                 ", createdTime=" + createdTime +
                 ", channel='" + channel + '\'' +
                 ", tags=" + tags +
-                ", owner='" + owner + '\'' +
+                ", ownerUsername='" + ownerUsername + '\'' +
+                ", ownerUrl='" + ownerUrl + '\'' +
+                ", ownerAvatar720Url='" + ownerAvatar720Url + '\'' +
                 '}';
+    }
+
+    public String getOwnerUsername() {
+        return ownerUsername;
+    }
+
+    public void setOwnerUsername(String ownerUsername) {
+        this.ownerUsername = ownerUsername;
+    }
+
+    public String getOwnerUrl() {
+        return ownerUrl;
+    }
+
+    public void setOwnerUrl(String ownerUrl) {
+        this.ownerUrl = ownerUrl;
+    }
+
+    public String getOwnerAvatar720Url() {
+        return ownerAvatar720Url;
+    }
+
+    public void setOwnerAvatar720Url(String ownerAvatar720Url) {
+        this.ownerAvatar720Url = ownerAvatar720Url;
     }
 }

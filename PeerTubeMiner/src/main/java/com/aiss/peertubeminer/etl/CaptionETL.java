@@ -36,8 +36,8 @@ public class CaptionETL {
             VMCaption caption = new VMCaption();
             if (ptCaption.getLanguage() != null) {
                 caption.setId(ptCaption.getLanguage().getId());
-                caption.setName(ptCaption.getLanguage().getLabel());
-                caption.setLanguage(ptCaption.getLanguage().getId());
+                caption.setName(ptCaption.getLink());
+                caption.setLanguage(ptCaption.getLanguage().getLabel());
             
             vmCaptions.add(caption);
         }});

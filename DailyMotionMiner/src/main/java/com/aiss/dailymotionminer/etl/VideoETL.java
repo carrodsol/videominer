@@ -6,7 +6,6 @@ import com.aiss.dailymotionminer.model.videominer.VMComment;
 import com.aiss.dailymotionminer.model.videominer.VMUser;
 import com.aiss.dailymotionminer.model.videominer.VMVideo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,29 +27,22 @@ public class VideoETL {
 
     // https://spring.io/guides/gs/async-method Usamos asincronía porque luego cada transform hace llamadas a la API
     // Antes eran muy lentas, ahora carga más rápido
-    @Async("etlExecutor")
     public CompletableFuture<VMVideo> transform(Video video) {
-        CompletableFuture<VMUser> vmUser = userETL.transform(video.getId());
+        VMUser user = userETL.transform(video);
+        List<VMComment> comments = commentETL.transform(video);
 
-        CompletableFuture<List<VMComment>> vmComments = commentETL.transform(video.getId());
-
-        CompletableFuture<List<VMCaption>> vmCaptions = subtitlesETL.transform(video.getId());
-
-        return CompletableFuture.allOf(vmUser, vmComments, vmCaptions)
-                .thenApply(v -> {
-                    VMUser user = vmUser.join();
-                    List<VMComment> comments = vmComments.join();
-                    List<VMCaption> captions = vmCaptions.join();
-
-                    return new VMVideo(
-                            video.getId(),
-                            video.getTitle(),
-                            video.getDescription(),
-                            user,
-                            video.getCreatedTime().toString(),
-                            comments,
-                            captions
-                    );
-                });
+        CompletableFuture<List<VMCaption>> vmCaptionsAsync = subtitlesETL.transform(video.getId());
+        // Esperamos a que los subtítulos se descarguen y construimos el objeto final
+        return vmCaptionsAsync.thenApply(captions -> 
+            new VMVideo(
+                video.getId(),
+                video.getTitle(),
+                video.getDescription(),
+                user,
+                video.getCreatedTime().toString(),
+                comments,
+                captions
+            )
+        );
     }
 }
