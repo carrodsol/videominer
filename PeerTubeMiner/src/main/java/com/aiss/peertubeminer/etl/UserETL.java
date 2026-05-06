@@ -5,14 +5,17 @@ import com.aiss.peertubeminer.model.peertube.PTAccountAvatar;
 import com.aiss.peertubeminer.model.videominer.VMUser;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import com.aiss.peertubeminer.service.UserService;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserETL {
 
-    public VMUser transform(PTAccount account) {
+    @Async
+    public CompletableFuture<VMUser> transform(PTAccount account) {
         if (account == null) {
             return null;
         }
@@ -24,6 +27,6 @@ public class UserETL {
             vmUser.setPicture_link(account.getAvatars().get(0).getPictureLink());
         }
 
-        return vmUser;
+        return CompletableFuture.completedFuture(vmUser);
     }
 }

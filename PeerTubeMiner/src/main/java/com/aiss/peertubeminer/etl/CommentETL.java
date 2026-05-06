@@ -4,10 +4,12 @@ import com.aiss.peertubeminer.model.peertube.PTCommentDatum;
 import com.aiss.peertubeminer.model.videominer.VMComment;
 import com.aiss.peertubeminer.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class CommentETL {
@@ -19,11 +21,12 @@ public class CommentETL {
         this.commentService = commentService;
     }
 
-    public List<VMComment> transform(String videoId, Integer maxComments) {
+    @Async("etlExecutor")
+    public CompletableFuture<List<VMComment>> transform(String videoId, Integer maxComments) {
         List<PTCommentDatum> comments = commentService.getComments(videoId, maxComments).getData();
         List<VMComment> vmComments = new ArrayList<>();
         if (comments == null || comments.isEmpty()) {
-            return vmComments;
+            return CompletableFuture.completedFuture(vmComments);
         }
 
         comments.forEach(ptComment -> {
@@ -38,7 +41,7 @@ public class CommentETL {
             comment.setCreatedOn(ptComment.getCreatedOn());
             vmComments.add(comment);
         });
-        return vmComments;
+        return CompletableFuture.completedFuture(vmComments);
     }
 
 

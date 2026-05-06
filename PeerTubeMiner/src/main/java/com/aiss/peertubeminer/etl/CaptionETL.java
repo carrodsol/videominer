@@ -4,10 +4,12 @@ import com.aiss.peertubeminer.model.peertube.PTCaptionDatum;
 import com.aiss.peertubeminer.model.videominer.VMCaption;
 import com.aiss.peertubeminer.service.CaptionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class CaptionETL {
@@ -19,11 +21,12 @@ public class CaptionETL {
         this.captionService = captionService;
     }
 
-    public List<VMCaption> transform(String videoId) {
+    @Async("etlExecutor")
+    public CompletableFuture<List<VMCaption>> transform(String videoId) {
         List<PTCaptionDatum> captions = captionService.getCaptionsById(videoId).getData();
         List<VMCaption> vmCaptions = new ArrayList<>();
         if (captions == null || captions.isEmpty()) {
-            return vmCaptions;
+            return CompletableFuture.completedFuture(vmCaptions);
         }
 
         captions.forEach(ptCaption -> {
@@ -38,7 +41,7 @@ public class CaptionETL {
             
             vmCaptions.add(caption);
         }});
-        return vmCaptions;
+        return CompletableFuture.completedFuture(vmCaptions);
     }
 
 
