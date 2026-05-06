@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ResponseEntity<Object> handleBadRequest(Exception ex) {
         Map<String, Object> body = new HashMap<>();
-        body.put("message", "Parámetros incorrecto de búsqueda");
+        body.put("message", "Parámetros incorrectos de búsqueda");
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
