@@ -41,7 +41,6 @@
               "    var jsonData = pm.response.json();\r",
               "    var actualCount = jsonData.length;\r",
               "\r",
-              "    // Crítica: El tamaño de la lista NO debe superar el esperado\r",
               "    pm.expect(actualCount).to.be.at.most(expectedMax, \r",
               "        `El servidor devolvió ${actualCount} vídeos, pero el límite combinado debería ser ${expectedMax}`);\r",
               "});\r",
@@ -126,7 +125,6 @@
               "    var jsonData = pm.response.json();\r",
               "    var actualCount = jsonData.videos.length;\r",
               "\r",
-              "    // Crítica: El tamaño de la lista NO debe superar el esperado\r",
               "    pm.expect(actualCount).to.be.at.most(expectedMax, \r",
               "        `El servidor devolvió ${actualCount} vídeos, pero el límite combinado debería ser ${expectedMax}`);\r",
               "});\r",
@@ -162,7 +160,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8081/DailyMotion/api/v1/channels/shortfilms?maxPages=2&maxVideos=10",
+          "raw": "http://localhost:8081/DailyMotion/api/v1/channels/shortfilms?maxPages=11&maxVideos=1000",
           "protocol": "http",
           "host": [
             "localhost"
@@ -178,11 +176,11 @@
           "query": [
             {
               "key": "maxPages",
-              "value": "2"
+              "value": "11"
             },
             {
               "key": "maxVideos",
-              "value": "10"
+              "value": "1000"
             }
           ]
         }
@@ -265,6 +263,97 @@
             {
               "key": "maxPages",
               "value": "a"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST Canales",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Estado es 201 Created\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"El cuerpo contiene un canal válido\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.id).to.eql(\"tv\");\r",
+              "    pm.expect(jsonData.videos).to.be.an('array');\r",
+              "    pm.expect(jsonData.name).to.be.a('string');\r",
+              "    pm.expect(jsonData.createdTime).to.exist;\r",
+              "});\r",
+              "\r",
+              "var maxVideos = parseInt(pm.request.url.query.get(\"maxVideos\")) || 10;\r",
+              "var maxPages = parseInt(pm.request.url.query.get(\"maxPages\")) || 2;\r",
+              "const limite = maxPages * 100; // Limite DailyMotion = 100\r",
+              "pm.test(`Validar límites: Solicitado ${maxVideos}, Máx Páginas ${maxPages} (Capacidad: ${limite} páginas como máximo)`, function () {\r",
+              "     \r",
+              "    const expectedMax = Math.min(maxVideos, limite);\r",
+              "    var jsonData = pm.response.json();\r",
+              "    var actualCount = jsonData.videos.length;\r",
+              "\r",
+              "   \r",
+              "    pm.expect(actualCount).to.be.at.most(expectedMax, \r",
+              "        `El servidor devolvió ${actualCount} vídeos, pero el límite combinado debería ser ${expectedMax}`);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Cada vídeo dentro del canal cumple el modelo VMVideo\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    \r",
+              "    jsonData.videos.forEach(function(video, index) {\r",
+              "        pm.expect(video.id).to.be.a('string').and.not.empty;\r",
+              "        pm.expect(video.name).to.be.a('string').and.not.empty;\r",
+              "        pm.expect(video.releaseTime).to.be.a('string');\r",
+              "        pm.expect(video.comments).to.be.an('array');\r",
+              "        pm.expect(video.captions).to.be.an('array');\r",
+              "        pm.test(`El autor del vídeo ${video.id} es válido`, function () {\r",
+              "            var user = video.user;\r",
+              "            pm.expect(user).to.be.an('object');\r",
+              "            pm.expect(user.name).to.be.a('string').and.not.empty;\r",
+              "            pm.expect(user.user_link).to.be.a('string').and.include('https://');\r",
+              "            pm.expect(user.picture_link).to.be.a('string').and.include('https://');\r",
+              "        });\r",
+              "    });\r",
+              "});\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/DailyMotion/api/v1/channels/tv?maxPages=11&maxVideos=1000",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "DailyMotion",
+            "api",
+            "v1",
+            "channels",
+            "tv"
+          ],
+          "query": [
+            {
+              "key": "maxPages",
+              "value": "11"
+            },
+            {
+              "key": "maxVideos",
+              "value": "1000"
             }
           ]
         }
