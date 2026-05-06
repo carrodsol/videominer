@@ -16,14 +16,14 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Error 404: Se activa si el recurso no existe en DailyMotion o si la URL es errónea
+    // Error 404: Se activa si el recurso no existe en PeerTube o si la URL es errónea
 
     // Para que se encargue de las dos
     @ExceptionHandler({HttpClientErrorException.NotFound.class, NoResourceFoundException.class})
     @ResponseBody
     public ResponseEntity<Object> handleNotFound(Exception ex) {
         Map<String, Object> body = new HashMap<>();
-        body.put("message", "El recurso solicitado no existe en DailyMotion");
+        body.put("message", "El recurso solicitado no existe en PeerTube");
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
