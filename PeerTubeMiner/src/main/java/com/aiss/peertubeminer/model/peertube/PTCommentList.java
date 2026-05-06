@@ -18,4 +18,12 @@ public class PTCommentList {
 
     public List<PTCommentDatum> getData() { return data; }
     public void setData(List<PTCommentDatum> data) { this.data = data; }
+
+    @Override
+    public String toString() {
+        return "PTCommentList{" +
+                "total=" + total +
+                ", data=" + data +
+                '}';
+    }
 }

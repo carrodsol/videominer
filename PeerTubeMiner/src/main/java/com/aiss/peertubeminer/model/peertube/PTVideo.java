@@ -41,4 +41,16 @@ public class PTVideo {
 
     public PTAccount getAccount() { return account; }
     public void setAccount(PTAccount account) { this.account = account; }
+
+    @Override
+    public String toString() {
+        return "PTVideo{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", releaseTime='" + releaseTime + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", account=" + account +
+                '}';
+    }
 }

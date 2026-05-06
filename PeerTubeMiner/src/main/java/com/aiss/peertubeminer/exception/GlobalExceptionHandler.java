@@ -23,6 +23,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ResponseEntity<Object> handleNotFound(Exception ex) {
         Map<String, Object> body = new HashMap<>();
+        ex.printStackTrace();
         body.put("message", "El recurso solicitado no existe en PeerTube");
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }

@@ -29,4 +29,14 @@ public class PTChannel {
 
     public String getCreatedTime() { return createdTime; }
     public void setCreatedTime(String createdTime) { this.createdTime = createdTime; }
+
+    @Override
+    public String toString() {
+        return "PTChannel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", createdTime='" + createdTime + '\'' +
+                '}';
+    }
 }

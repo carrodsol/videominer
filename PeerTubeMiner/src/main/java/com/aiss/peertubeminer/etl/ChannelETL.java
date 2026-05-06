@@ -24,7 +24,6 @@ public class ChannelETL {
 
     public VMChannel transform(String channelId, int maxVideos, int maxComments) {
         PTChannel channel = channelService.getChannelById(channelId);
-
         List<VMVideo> vmVideos = videoETL.transform(channelId, maxVideos, maxComments);
         String resolvedId = channel.getId() != null ? channel.getId().toString() : channelId;
         String createdTime = channel.getCreatedTime();

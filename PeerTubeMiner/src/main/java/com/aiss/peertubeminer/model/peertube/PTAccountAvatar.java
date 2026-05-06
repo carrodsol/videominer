@@ -11,4 +11,11 @@ public class PTAccountAvatar {
 
     public String getPictureLink() { return pictureLink; }
     public void setPictureLink(String pictureLink) { this.pictureLink = pictureLink; }
+
+    @Override
+    public String toString() {
+        return "PTAccountAvatar{" +
+                "pictureLink='" + pictureLink + '\'' +
+                '}';
+    }
 }

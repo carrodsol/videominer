@@ -31,6 +31,7 @@ public class VideoETL {
     public List<VMVideo> transform(String channelId, int maxVideos, int maxComments) {
         List<PTVideo> ptVideos = videoService.getVideosFromChannel(channelId, maxVideos).getData();
 
+
         if (ptVideos == null || ptVideos.isEmpty()) {
             return Collections.emptyList();
         }

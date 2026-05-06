@@ -29,4 +29,14 @@ public class PTCommentDatum {
 
     public String getCreatedOn() { return createdOn; }
     public void setCreatedOn(String createdOn) { this.createdOn = createdOn; }
+
+    @Override
+    public String toString() {
+        return "PTCommentDatum{" +
+                "id=" + id +
+                ", uuid='" + uuid + '\'' +
+                ", text='" + text + '\'' +
+                ", createdOn='" + createdOn + '\'' +
+                '}';
+    }
 }

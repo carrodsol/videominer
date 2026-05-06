@@ -45,7 +45,7 @@ class PeerTubeServiceTest {
     @DisplayName("Obtener subtítulos")
     void getCaptions() {
         // Primero obtenemos un vídeo real para tener su UUID
-        PTCaptionList captions = captionService.getCaptionsById("bc5b5ab6-b322-43c3-8881-0d4f17974ca6");
+        PTCaptionList captions = captionService.getCaptionsById("1174e225-1a2e-4e6c-8ab4-1b709cd46978");
         assertNotNull(captions);
         System.out.println(captions);
     }
@@ -53,7 +53,7 @@ class PeerTubeServiceTest {
     @Test
     @DisplayName("Obtener comentarios")
     void getComments() {
-        PTCommentList comments = commentService.getComments("bc5b5ab6-b322-43c3-8881-0d4f17974ca6", 1);
+        PTCommentList comments = commentService.getComments("3d95fb3d-c866-42c8-9db1-fe82f48ccb95", 10);
         assertNotNull(comments);
         System.out.println(comments);
     }

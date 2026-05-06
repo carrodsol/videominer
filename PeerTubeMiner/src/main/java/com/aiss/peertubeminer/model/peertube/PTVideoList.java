@@ -18,4 +18,12 @@ public class PTVideoList {
 
     public List<PTVideo> getData() { return data; }
     public void setData(List<PTVideo> data) { this.data = data; }
+
+    @Override
+    public String toString() {
+        return "PTVideoList{" +
+                "total=" + total +
+                ", data=" + data +
+                '}';
+    }
 }

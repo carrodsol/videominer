@@ -18,4 +18,12 @@ public class PTCaptionList {
 
     public List<PTCaptionDatum> getData() { return data; }
     public void setData(List<PTCaptionDatum> data) { this.data = data; }
+
+    @Override
+    public String toString() {
+        return "PTCaptionList{" +
+                "total=" + total +
+                ", data=" + data +
+                '}';
+    }
 }

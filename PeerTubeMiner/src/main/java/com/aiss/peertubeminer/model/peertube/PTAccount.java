@@ -30,4 +30,14 @@ public class PTAccount {
 
     public List<PTAccountAvatar> getAvatars() { return avatars; }
     public void setAvatars(List<PTAccountAvatar> avatars) { this.avatars = avatars; }
+
+    @Override
+    public String toString() {
+        return "PTAccount{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", userLink='" + userLink + '\'' +
+                ", avatars=" + avatars +
+                '}';
+    }
 }
