@@ -3,7 +3,6 @@ package com.aiss.peertubeminer.etl;
 import com.aiss.peertubeminer.model.peertube.PTVideo;
 import com.aiss.peertubeminer.model.videominer.VMCaption;
 import com.aiss.peertubeminer.model.videominer.VMComment;
-import com.aiss.peertubeminer.model.videominer.VMUser;
 import com.aiss.peertubeminer.model.videominer.VMVideo;
 import com.aiss.peertubeminer.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ public class VideoETL {
         this.captionETL = captionETL;
         this.videoService = videoService;
     }
-
+    
     @Async("etlExecutor")
     public CompletableFuture<List<VMVideo>> transform(String channelId, int maxVideos, int maxComments) {
         List<PTVideo> ptVideos = videoService.getVideosFromChannel(channelId, maxVideos).getData();
@@ -49,11 +48,7 @@ public class VideoETL {
 
                     String releaseTime = video.getReleaseTime() != null ? video.getReleaseTime() : video.getCreatedAt();
                     vmVideo.setReleaseTime(releaseTime);
-
-                    CompletableFuture<VMUser> authorFuture = userETL.transform(video.getAccount());
-                    if (authorFuture == null) {
-                        authorFuture = CompletableFuture.completedFuture(null);
-                    }
+                    vmVideo.setAuthor(userETL.transform(video.getAccount()));
 
                     CompletableFuture<List<VMComment>> commentsFuture;
                     CompletableFuture<List<VMCaption>> captionsFuture;
@@ -66,11 +61,8 @@ public class VideoETL {
                         captionsFuture = CompletableFuture.completedFuture(Collections.emptyList());
                     }
 
-                    CompletableFuture<VMUser> finalAuthorFuture = authorFuture;
-                    return CompletableFuture.allOf(finalAuthorFuture, commentsFuture, captionsFuture)
+                    return CompletableFuture.allOf(commentsFuture, captionsFuture)
                             .thenApply(v -> {
-                                vmVideo.setAuthor(finalAuthorFuture.join());
-                                
                                 List<VMComment> comments = commentsFuture.join();
                                 vmVideo.setComments(comments != null ? comments : Collections.emptyList());
                                 
