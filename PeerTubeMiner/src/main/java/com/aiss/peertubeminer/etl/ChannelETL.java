@@ -25,9 +25,10 @@ public class ChannelETL {
     public VMChannel transform(String channelId, int maxVideos, int maxComments) {
         PTChannel channel = channelService.getChannelById(channelId);
 
-        // Delegamos a VideoETL la responsabilidad de usar maxVideos y maxComments
         List<VMVideo> vmVideos = videoETL.transform(channelId, maxVideos, maxComments);
+        String resolvedId = channel.getId() != null ? channel.getId().toString() : channelId;
+        String createdTime = channel.getCreatedTime();
 
-        return new VMChannel(channelId, vmVideos, channel.getCreatedTime().toString(), channel.getDescription(), channel.getName());
+        return new VMChannel(resolvedId, vmVideos, createdTime, channel.getDescription(), channel.getName());
     }
 }

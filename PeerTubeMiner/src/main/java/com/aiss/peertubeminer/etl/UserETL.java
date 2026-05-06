@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 public class UserETL {
 
     public VMUser transform(PTAccount account) {
+        if (account == null) {
+            return null;
+        }
         VMUser vmUser = new VMUser();
         vmUser.setName(account.getName());
         vmUser.setUser_link(account.getUserLink());

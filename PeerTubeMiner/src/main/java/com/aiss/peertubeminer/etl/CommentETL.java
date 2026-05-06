@@ -22,12 +22,21 @@ public class CommentETL {
     public List<VMComment> transform(String videoId, Integer maxComments) {
         List<PTCommentDatum> comments = commentService.getComments(videoId, maxComments).getData();
         List<VMComment> vmComments = new ArrayList<>();
+        if (comments == null || comments.isEmpty()) {
+            return vmComments;
+        }
+
         comments.forEach(ptComment -> {
+            if (ptComment == null) {
+                return;
+            }
             VMComment comment = new VMComment();
-                comment.setId(ptComment.getId().toString());
-                comment.setText(ptComment.getText());
-                comment.setCreatedOn(ptComment.getCreatedOn());
-                vmComments.add(comment);
+            String commentId = ptComment.getUuid() != null ? ptComment.getUuid() :
+                    (ptComment.getId() != null ? ptComment.getId().toString() : null);
+            comment.setId(commentId);
+            comment.setText(ptComment.getText());
+            comment.setCreatedOn(ptComment.getCreatedOn());
+            vmComments.add(comment);
         });
         return vmComments;
     }

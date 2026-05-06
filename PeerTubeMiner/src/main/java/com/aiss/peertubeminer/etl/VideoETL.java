@@ -31,10 +31,11 @@ public class VideoETL {
     public List<VMVideo> transform(String channelId, int maxVideos, int maxComments) {
         List<PTVideo> ptVideos = videoService.getVideosFromChannel(channelId, maxVideos).getData();
 
-        return ptVideos.stream().map(video -> {
-            if (video == null) {
-                return null;
-            }
+        if (ptVideos == null || ptVideos.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return ptVideos.stream().filter(video -> video != null).map(video -> {
 
             VMVideo vmVideo = new VMVideo();
             vmVideo.setId(video.getId());
@@ -48,8 +49,8 @@ public class VideoETL {
             if (video.getId() != null) {
                 List<VMComment> comments = commentETL.transform(video.getId(), maxComments);
                 List<VMCaption> captions = captionETL.transform(video.getId());
-                vmVideo.setComments(comments);
-                vmVideo.setCaptions(captions);
+                vmVideo.setComments(comments != null ? comments : Collections.emptyList());
+                vmVideo.setCaptions(captions != null ? captions : Collections.emptyList());
             } else {
                 vmVideo.setComments(Collections.emptyList());
                 vmVideo.setCaptions(Collections.emptyList());
