@@ -1,6 +1,5 @@
 package com.aiss.peertubeminer.etl;
 
-
 import com.aiss.peertubeminer.model.peertube.PTChannel;
 import com.aiss.peertubeminer.model.videominer.VMChannel;
 import com.aiss.peertubeminer.model.videominer.VMVideo;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class ChannelETL {
@@ -23,11 +23,11 @@ public class ChannelETL {
     }
 
     public VMChannel transform(String channelId, int maxVideos, int maxComments) {
+        CompletableFuture<List<VMVideo>> vmVideosAsync = videoETL.transform(channelId, maxVideos, maxComments);
         PTChannel channel = channelService.getChannelById(channelId);
-        List<VMVideo> vmVideos = videoETL.transform(channelId, maxVideos, maxComments);
+        List<VMVideo> vmVideos = vmVideosAsync.join();
         String resolvedId = channel.getId() != null ? channel.getId().toString() : channelId;
         String createdTime = channel.getCreatedTime();
-
         return new VMChannel(resolvedId, vmVideos, createdTime, channel.getDescription(), channel.getName());
     }
 }
