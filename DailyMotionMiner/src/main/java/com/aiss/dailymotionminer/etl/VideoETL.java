@@ -6,6 +6,7 @@ import com.aiss.dailymotionminer.model.videominer.VMComment;
 import com.aiss.dailymotionminer.model.videominer.VMUser;
 import com.aiss.dailymotionminer.model.videominer.VMVideo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class VideoETL {
 
     // https://spring.io/guides/gs/async-method Usamos asincronía porque luego cada transform hace llamadas a la API
     // Antes eran muy lentas, ahora carga más rápido
+    @Async("etlExecutor")
     public CompletableFuture<VMVideo> transform(Video video) {
         CompletableFuture<VMUser> vmUser = userETL.transform(video.getId());
 
