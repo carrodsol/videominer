@@ -27,7 +27,7 @@ public class ChannelController {
     @Autowired
     RestTemplate restTemplate;
 
-    @Value("${videominer.base.url:http://localhost:8080}")
+    @Value("${videominer.base.url}")
     private String videoMinerBaseUrl;
 
     @Operation(summary = "Obtener canal por ID", description = "Recupera y transforma un canal de PeerTube.", tags = {"channels", "get"})

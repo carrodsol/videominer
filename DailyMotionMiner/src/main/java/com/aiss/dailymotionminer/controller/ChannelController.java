@@ -32,8 +32,8 @@ public class ChannelController {
     private final ChannelETL channelETL;
     private final RestTemplate restTemplate;
 
-    @Value("${VideoMiner.uri}")
-    private String videoMinerUri;
+    @Value("${videominer.base.url}")
+    private String videoMinerBaseUrl;
 
     @Autowired
     public ChannelController(VideoService videoService,
@@ -91,8 +91,8 @@ public class ChannelController {
             @RequestParam(defaultValue = "2") Integer maxPages) {
 
         VMChannel channel = getChannelById(id, maxVideos, maxPages);
-        restTemplate.postForObject(videoMinerUri + "/channels", channel, VMChannel.class);
 
+        restTemplate.postForObject(videoMinerBaseUrl + "/videominer/api/channels", channel, VMChannel.class);
         return channel;
     }
 }
