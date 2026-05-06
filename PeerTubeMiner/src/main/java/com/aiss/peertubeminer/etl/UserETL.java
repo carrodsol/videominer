@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserETL {
 
-    @Async
+    @Async("etlExecutor")
     public CompletableFuture<VMUser> transform(PTAccount account) {
         if (account == null) {
             return null;
