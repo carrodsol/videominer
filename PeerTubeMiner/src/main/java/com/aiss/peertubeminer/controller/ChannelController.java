@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 @Tag(name = "Channels", description = "API encargada de la gestión y exportación de canales de PeerTube")
-@RequestMapping("/PeerTubeMiner/api/v1/channels")
+@RequestMapping("/peertube/api/v1/channels")
 public class ChannelController {
 
     @Autowired

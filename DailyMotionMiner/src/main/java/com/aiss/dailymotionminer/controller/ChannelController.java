@@ -24,7 +24,7 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 // Ruta: localhost:8081/DailyMotion/api/v1/channels/{id}
 @Tag(name = "Channels", description = "API encargada de la gestión y exportación de canales de DailyMotion")
-@RequestMapping("/DailyMotion/api/v1/channels")
+@RequestMapping("/dailymotion/api/v1/channels")
 public class ChannelController {
 
     private final VideoService videoService;
