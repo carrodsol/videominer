@@ -154,9 +154,11 @@ public class ChannelController {
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable String id) {
+    public void delete(@PathVariable String id) throws ChannelNotFoundException {
         if (repository.existsById(id)) {
             repository.deleteById(id);
+        } else {
+            throw new ChannelNotFoundException();
         }
     }
 }

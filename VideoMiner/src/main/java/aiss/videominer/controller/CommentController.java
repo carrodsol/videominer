@@ -90,9 +90,11 @@ public class CommentController {
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable String id) {
+    public void delete(@PathVariable String id) throws CommentNotFoundException{
         if (repository.existsById(id)) {
             repository.deleteById(id);
+        } else {
+            throw new CommentNotFoundException();
         }
     }
 }
