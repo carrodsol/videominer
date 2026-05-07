@@ -4,6 +4,7 @@ import aiss.videominer.exception.ChannelNotFoundException;
 import aiss.videominer.model.Channel;
 import aiss.videominer.model.Video;
 import aiss.videominer.repository.ChannelRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,44 @@ public class ChannelController {
     // GET http://localhost:8080/videominer/api/channels
     @GetMapping
     public List<Channel> findAll() { return repository.findAll(); }
+
+
+    // GET http://localhost:8080/videominer/api/channels/{id}/private
+    @GetMapping("/{id}/private")
+    public Channel findOnePrivate(@PathVariable String id, HttpServletRequest request) throws ChannelNotFoundException {
+        Optional<Channel> channelOpt = repository.findById(id);
+        if (channelOpt.isEmpty()) {
+            throw new ChannelNotFoundException();
+        }
+
+        Channel channel = channelOpt.get();
+
+
+        Object premiumAttr = request.getAttribute("isPremiumUser");
+        boolean isPremium = premiumAttr != null && (boolean) premiumAttr;
+
+
+        List<Video> videos = channel.getVideos();
+
+        if (videos != null && !videos.isEmpty()) {
+            int maxVideos;
+
+            if (isPremium) {
+                maxVideos = 50;
+                System.out.println("Petición VIP: Devolviendo hasta 50 vídeos.");
+            } else {
+                maxVideos = 5;
+                System.out.println("Petición Gratuita: Devolviendo máximo 5 vídeos.");
+            }
+
+
+            if (videos.size() > maxVideos) {
+                channel.setVideos(videos.subList(0, maxVideos));
+            }
+        }
+
+        return channel;
+    }
 
     // GET http://localhost:8080/videominer/api/channels/{id}
     @GetMapping("/{id}")

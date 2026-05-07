@@ -13,8 +13,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // Añadimos nuestro interceptor
+        // Añadimos nuestro interceptor para que vigile TODA la API
         registry.addInterceptor(apiKeyInterceptor)
-                .addPathPatterns("/videominer/**/private");
+                .addPathPatterns("/videominer/**");
     }
 }

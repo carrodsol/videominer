@@ -29,9 +29,6 @@ public class CaptionController {
     @GetMapping
     public List<Caption> findAll() { return repository.findAll(); }
 
-    // With API KEYS
-    @GetMapping("/private")
-    public List<Caption> findAllPrivate() { return repository.findAll(); }
 
     // GET http://localhost:8080/videominer/api/captions/{id}
     @GetMapping("/{id}")

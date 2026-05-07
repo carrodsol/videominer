@@ -8,23 +8,35 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 public class ApiKeyInterceptor implements HandlerInterceptor {
-    // Leemos la clave que pusimos en el application.properties
+
     @Value("${videominer.api.key}")
     private String apiKey;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+        String httpMethod = request.getMethod();
+
         String authHeader = request.getHeader("Authorization");
+        boolean hasValidKey = false;
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             if (apiKey.equals(token)) {
-                return true;
+                hasValidKey = true;
             }
         }
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("401 Unauthorized: API Key invalida o ausente");
-        return false;
+
+        if (httpMethod.equals("POST") || httpMethod.equals("PUT") || httpMethod.equals("DELETE")) {
+            if (!hasValidKey) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("401 Unauthorized: Necesitas una API Key valida para hacer un " + httpMethod);
+                return false;
+            }
+        }
+
+        request.setAttribute("isPremiumUser", hasValidKey);
+
+        return true;
     }
 }
