@@ -1,0 +1,251 @@
+{
+  "info": {
+    "name": "PeerTubeMiner Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET Canal",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"El estado es 200 OK\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"El cuerpo contiene un canal válido\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.name).to.eql(\"tv\");\r",
+              "    pm.expect(jsonData.videos).to.be.an('array');\r",
+              "    pm.expect(jsonData.name).to.be.a('string');\r",
+              "    pm.expect(jsonData.createdTime).to.exist;\r",
+              "});\r",
+              "\r",
+              "var maxVideos = parseInt(pm.request.url.query.get(\"maxVideos\")) || 10;\r",
+              "var maxComments = parseInt(pm.request.url.query.get(\"maxComments\")) || 2;\r",
+              "\r",
+              "pm.test(`Se respeta el límite de maxVideos (Máximo: ${maxVideos})`, function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    var actualCount = jsonData.videos.length;\r",
+              "    pm.expect(actualCount).to.be.at.most(maxVideos, \r",
+              "        `El servidor devolvió ${actualCount} vídeos, superando el límite de ${maxVideos}`);\r",
+              "});\r",
+              "\r",
+              "pm.test(`Cada vídeo cumple el modelo VMVideo y respeta maxComments (Máximo: ${maxComments})`, function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    \r",
+              "    jsonData.videos.forEach(function(video) {\r",
+              "        pm.expect(video.id).to.be.a('string').and.not.empty;\r",
+              "        pm.expect(video.name).to.be.a('string').and.not.empty;\r",
+              "        pm.expect(video.releaseTime).to.be.a('string');\r",
+              "        pm.expect(video.comments).to.be.an('array');\r",
+              "        pm.expect(video.captions).to.be.an('array');\r",
+              "        \r",
+              "        // Validar límite de comentarios\r",
+              "        pm.expect(video.comments.length).to.be.at.most(maxComments,\r",
+              "            `El vídeo ${video.id} tiene ${video.comments.length} comentarios, superando el límite de ${maxComments}`);\r",
+              "\r",
+              "        // Validar usuario\r",
+              "        var user = video.user;\r",
+              "        pm.expect(user).to.be.an('object');\r",
+              "        pm.expect(user.name).to.be.a('string').and.not.empty;\r",
+              "        pm.expect(user.user_link).to.be.a('string').and.include('http');\r",
+              "        pm.expect(user.picture_link).to.be.a('string').and.include('http');\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/peertube/api/v1/channels/tv?maxVideos=10&maxComments=2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "peertube",
+            "api",
+            "v1",
+            "channels",
+            "tv"
+          ],
+          "query": [
+            {
+              "key": "maxVideos",
+              "value": "10"
+            },
+            {
+              "key": "maxComments",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET Canal Negativo 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"El código de estado es 404\", function () {\r",
+              "    pm.response.to.have.status(404);\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/peertube/api/v1/channels/canal_que_no_existe_123",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "peertube",
+            "api",
+            "v1",
+            "channels",
+            "noExiste"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET Canal Negativo 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"El código de estado es 400\", function () {\r",
+              "    pm.response.to.have.status(400);\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/peertube/api/v1/channels/tv?maxVideos=letras",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "peertube",
+            "api",
+            "v1",
+            "channels",
+            "tv"
+          ],
+          "query": [
+            {
+              "key": "maxVideos",
+              "value": "a"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST Canal",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"El estado es 201 Created\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"El cuerpo contiene el canal que se ha exportado\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.name).to.eql(\"tv\");\r",
+              "    pm.expect(jsonData.videos).to.be.an('array');\r",
+              "    pm.expect(jsonData.name).to.be.a('string');\r",
+              "    pm.expect(jsonData.createdTime).to.exist;\r",
+              "});\r",
+              "\r",
+              "var maxVideos = parseInt(pm.request.url.query.get(\"maxVideos\")) || 10;\r",
+              "var maxComments = parseInt(pm.request.url.query.get(\"maxComments\")) || 2;\r",
+              "\r",
+              "pm.test(`Se respeta el límite de maxVideos (Máximo: ${maxVideos}) en la respuesta`, function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    var actualCount = jsonData.videos.length;\r",
+              "    pm.expect(actualCount).to.be.at.most(maxVideos);\r",
+              "});\r",
+              "\r",
+              "pm.test(`Cada vídeo exportado respeta maxComments (Máximo: ${maxComments}) y el modelo`, function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    \r",
+              "    jsonData.videos.forEach(function(video) {\r",
+              "        pm.expect(video.id).to.be.a('string').and.not.empty;\r",
+              "        pm.expect(video.name).to.be.a('string').and.not.empty;\r",
+              "        pm.expect(video.comments).to.be.an('array');\r",
+              "        pm.expect(video.comments.length).to.be.at.most(maxComments);\r",
+              "        \r",
+              "        var user = video.user;\r",
+              "        pm.expect(user).to.be.an('object');\r",
+              "        pm.expect(user.name).to.be.a('string').and.not.empty;\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/peertube/api/v1/channels/tv?maxVideos=10&maxComments=2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "peertube",
+            "api",
+            "v1",
+            "channels",
+            "tv"
+          ],
+          "query": [
+            {
+              "key": "maxVideos",
+              "value": "10"
+            },
+            {
+              "key": "maxComments",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
