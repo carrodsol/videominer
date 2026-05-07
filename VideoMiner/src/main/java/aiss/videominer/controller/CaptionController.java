@@ -3,11 +3,15 @@ package aiss.videominer.controller;
 import aiss.videominer.exception.CaptionNotFoundException;
 import aiss.videominer.model.Caption;
 import aiss.videominer.repository.CaptionRepository;
+import org.springframework.beans.factory.annotation.Value;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,9 +22,16 @@ public class CaptionController {
     @Autowired
     CaptionRepository repository;
 
+    @Value("${videominer.api.key:}")
+    private String configuredApiKey;
+
     // GET http://localhost:8080/videominer/api/captions
     @GetMapping
     public List<Caption> findAll() { return repository.findAll(); }
+
+    // With API KEYS
+    @GetMapping("/private")
+    public List<Caption> findAllPrivate() { return repository.findAll(); }
 
     // GET http://localhost:8080/videominer/api/captions/{id}
     @GetMapping("/{id}")
