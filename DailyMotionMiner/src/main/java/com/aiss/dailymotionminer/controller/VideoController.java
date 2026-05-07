@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@Tag(name = "Video", description = "API encargada del manejo de videos de DailyMotion")
-@RequestMapping("/DailyMotion/api/v1/videos")
+@Tag(name = "Videos", description = "API encargada del manejo de videos de DailyMotion")
+@RequestMapping("/dailymotion/api/v1/videos")
 public class VideoController {
 
     private final VideoService videoService;
@@ -36,7 +36,7 @@ public class VideoController {
     @Operation(
             summary = "Obtener lista de vídeos",
             description = "Recupera y transforma una lista de los últimos vídeos globales de DailyMotion.",
-            tags = {"videos", "get"})
+            tags = {"Videos", "get"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista de vídeos obtenida con éxito", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Parámetros incorrectos",

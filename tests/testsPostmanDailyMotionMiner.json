@@ -81,14 +81,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8081/DailyMotion/api/v1/videos",
+          "raw": "http://localhost:8081/dailymotion/api/v1/videos",
           "protocol": "http",
           "host": [
             "localhost"
           ],
           "port": "8081",
           "path": [
-            "DailyMotion",
+            "dailymotion",
             "api",
             "v1",
             "videos"
@@ -160,14 +160,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8081/DailyMotion/api/v1/channels/shortfilms?maxPages=11&maxVideos=1000",
+          "raw": "http://localhost:8081/dailymotion/api/v1/channels/shortfilms?maxPages=2&maxVideos=10",
           "protocol": "http",
           "host": [
             "localhost"
           ],
           "port": "8081",
           "path": [
-            "DailyMotion",
+            "dailymotion",
             "api",
             "v1",
             "channels",
@@ -176,11 +176,11 @@
           "query": [
             {
               "key": "maxPages",
-              "value": "11"
+              "value": "2"
             },
             {
               "key": "maxVideos",
-              "value": "1000"
+              "value": "10"
             }
           ]
         }
@@ -208,14 +208,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8081/DailyMotion/api/v1/channels/patatas",
+          "raw": "http://localhost:8081/dailymotion/api/v1/channels/patatas",
           "protocol": "http",
           "host": [
             "localhost"
           ],
           "port": "8081",
           "path": [
-            "DailyMotion",
+            "dailymotion",
             "api",
             "v1",
             "channels",
@@ -246,14 +246,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8081/DailyMotion/api/v1/channels/shortfilms?maxPages=a",
+          "raw": "http://localhost:8081/dailymotion/api/v1/channels/shortfilms?maxPages=a",
           "protocol": "http",
           "host": [
             "localhost"
           ],
           "port": "8081",
           "path": [
-            "DailyMotion",
+            "dailymotion",
             "api",
             "v1",
             "channels",
@@ -333,14 +333,14 @@
         "method": "POST",
         "header": [],
         "url": {
-          "raw": "http://localhost:8081/DailyMotion/api/v1/channels/tv?maxPages=11&maxVideos=1000",
+          "raw": "http://localhost:8081/dailymotion/api/v1/channels/tv?maxPages=2&maxVideos=10",
           "protocol": "http",
           "host": [
             "localhost"
           ],
           "port": "8081",
           "path": [
-            "DailyMotion",
+            "dailymotion",
             "api",
             "v1",
             "channels",
@@ -349,11 +349,11 @@
           "query": [
             {
               "key": "maxPages",
-              "value": "11"
+              "value": "2"
             },
             {
               "key": "maxVideos",
-              "value": "1000"
+              "value": "10"
             }
           ]
         }

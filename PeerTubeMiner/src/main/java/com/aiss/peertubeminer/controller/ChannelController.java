@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 @Tag(name = "Channels", description = "API encargada de la gestión y exportación de canales de PeerTube")
-@RequestMapping("/PeerTubeMiner/api/v1/channels")
+@RequestMapping("/peertube/api/v1/channels")
 public class ChannelController {
 
     @Autowired
@@ -30,7 +30,7 @@ public class ChannelController {
     @Value("${videominer.base.url:http://localhost:8080}")
     private String videoMinerBaseUrl;
 
-    @Operation(summary = "Obtener canal por ID", description = "Recupera y transforma un canal de PeerTube.", tags = {"channels", "get"})
+    @Operation(summary = "Obtener canal por ID", description = "Recupera y transforma un canal de PeerTube.", tags = {"Channels", "get"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Canal obtenido con éxito", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Parámetros incorrectos",
@@ -49,7 +49,7 @@ public class ChannelController {
         return channelETL.transform(id, maxVideos, maxComments);
     }
 
-    @Operation(summary = "Exportar canal a VideoMiner", tags = {"channels", "post"}, description = "Envía un canal a VideoMiner")
+    @Operation(summary = "Exportar canal a VideoMiner", tags = {"Channels", "post"}, description = "Envía un canal a VideoMiner")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Canal exportado con éxito", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Parámetros incorrectos",
