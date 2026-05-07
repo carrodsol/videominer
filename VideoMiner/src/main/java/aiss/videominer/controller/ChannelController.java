@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("videominer/api/channels")
+@RequestMapping("/videominer/channels")
 public class ChannelController {
     @Autowired
     ChannelRepository repository;

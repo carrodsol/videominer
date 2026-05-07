@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("videominer/api/videos")
+@RequestMapping("/videominer/videos")
 public class VideoController {
     @Autowired
     VideoRepository repository;
