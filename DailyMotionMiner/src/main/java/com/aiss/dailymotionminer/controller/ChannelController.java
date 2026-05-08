@@ -92,7 +92,7 @@ public class ChannelController {
 
         VMChannel channel = getChannelById(id, maxVideos, maxPages);
 
-        restTemplate.postForObject(videoMinerBaseUrl + "/videominer/api/channels", channel, VMChannel.class);
+        restTemplate.postForObject(videoMinerBaseUrl + "/videominer/channels", channel, VMChannel.class);
         return channel;
     }
 }
