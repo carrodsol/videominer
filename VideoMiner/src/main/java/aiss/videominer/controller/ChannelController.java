@@ -20,13 +20,13 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("videominer/api/channels")
+@RequestMapping("/videominer/channels")
 @Tag(name = "Channels", description = "API para la gestión de canales y sus vídeos asociados")
 public class ChannelController {
     @Autowired
     ChannelRepository repository;
 
-    // GET http://localhost:8080/videominer/api/channels
+    // GET http://localhost:8080/videominer/channels
     @Operation(summary = "Obtener todos los canales", description = "Devuelve la lista completa de canales.", tags = {"Channels", "get"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista de canales obtenida con éxito",
@@ -37,7 +37,7 @@ public class ChannelController {
     @GetMapping
     public List<Channel> findAll() { return repository.findAll(); }
 
-    // GET http://localhost:8080/videominer/api/channels/{id}
+    // GET http://localhost:8080/videominer/channels/{id}
     @Operation(summary = "Obtener canal por ID", description = "Devuelve un canal concreto dado su id.", tags = {"Channels", "get"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Canal obtenido con éxito",
@@ -56,7 +56,7 @@ public class ChannelController {
         return channel.get();
     }
 
-    // GET http://localhost:8080/videominer/api/channels/{id}/videos
+    // GET http://localhost:8080/videominer/channels/{id}/videos
     @Operation(summary = "Obtener vídeos de un canal", description = "Devuelve todos los vídeos asociados a un canal dado su ID.", tags = {"Videos", "get"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista de vídeos obtenida con éxito",
@@ -75,7 +75,7 @@ public class ChannelController {
         return channel.get().getVideos();
     }
 
-    // POST http://localhost:8080/videominer/api/channels
+    // POST http://localhost:8080/videominer/channels
     @Operation(summary = "Crear canal", description = "Crea y almacena un nuevo canal.", tags = {"Channels", "post"})
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Canal creado con éxito",
@@ -117,7 +117,7 @@ public class ChannelController {
         return video;
     }
 
-    // PUT http://localhost:8080/videominer/api/channels/{id}
+    // PUT http://localhost:8080/videominer/channels/{id}
     @Operation(summary = "Actualizar canal", description = "Actualiza los datos de un canal existente.", tags = {"Channels", "put"})
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Canal actualizado con éxito"),
@@ -143,7 +143,7 @@ public class ChannelController {
         repository.save(_channel);
     }
 
-    // DELETE http://localhost:8080/videominer/api/channels/{id}
+    // DELETE http://localhost:8080/videominer/channels/{id}
     @Operation(summary = "Eliminar canal", description = "Elimina un canal dado su id.", tags = {"Channels", "delete"})
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Canal eliminado con éxito"),

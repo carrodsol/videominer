@@ -18,14 +18,14 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/videominer/api/captions")
+@RequestMapping("/videominer/captions")
 @Tag(name = "Captions", description = "API para la gestión de subtítulos de vídeos")
 public class CaptionController {
 
     @Autowired
     CaptionRepository repository;
 
-    // GET http://localhost:8080/videominer/api/caption
+    // GET http://localhost:8080/videominer/captions
     @Operation(summary = "Obtener todos los subtítulos", description = "Devuelve la lista completa de subtítulos.", tags = {"Captions", "get"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista de subtítulos obtenida con éxito",
@@ -36,7 +36,7 @@ public class CaptionController {
     @GetMapping
     public List<Caption> findAll() { return repository.findAll(); }
 
-    // GET http://localhost:8080/videominer/api/captions/{id}
+    // GET http://localhost:8080/videominer/captions/{id}
     @Operation(summary = "Obtener subtítulo por ID", description = "Devuelve un subtítulo concreto dado su id.", tags = {"Captions", "get"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Subtítulo obtenido con éxito",
@@ -55,7 +55,7 @@ public class CaptionController {
         return caption.get();
     }
 
-    // PUT http://localhost:8080/videominer/api/captions/{id}
+    // PUT http://localhost:8080/videominer/captions/{id}
     @Operation(summary = "Actualizar subtítulo", description = "Actualiza los datos de un subtítulo existente.", tags = {"Captions", "put"})
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Subtítulo actualizado con éxito"),
@@ -79,7 +79,7 @@ public class CaptionController {
         repository.save(_caption);
     }
 
-    // DELETE http://localhost:8080/videominer/api/captions/{id}
+    // DELETE http://localhost:8080/videominer/captions/{id}
     @Operation(summary = "Eliminar subtítulo", description = "Elimina un subtítulo dado su id.", tags = {"Captions", "delete"})
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Subtítulo eliminado con éxito"),

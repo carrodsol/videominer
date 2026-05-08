@@ -18,14 +18,14 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/videominer/api/comments")
+@RequestMapping("/videominer/comments")
 @Tag(name = "Comments", description = "API para la gestión de comentarios de vídeos")
 public class CommentController {
 
     @Autowired
     CommentRepository repository;
 
-    // GET http://localhost:8080/videominer/api/comments
+    // GET http://localhost:8080/videominer/comments
     @Operation(summary = "Obtener todos los comentarios", description = "Devuelve la lista completa de comentarios.", tags = {"Comments", "get"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista de comentarios obtenida con éxito",
@@ -36,7 +36,7 @@ public class CommentController {
     @GetMapping
     public List<Comment> findAll() { return repository.findAll(); }
 
-    // GET http://localhost:8080/videominer/api/comments/{id}
+    // GET http://localhost:8080/videominer/comments/{id}
     @Operation(summary = "Obtener comentario por ID", description = "Devuelve un comentario concreto dado su id.", tags = {"Comments", "get"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Comentario obtenido con éxito",
@@ -55,7 +55,7 @@ public class CommentController {
         return comment.get();
     }
 
-    // PUT http://localhost:8080/videominer/api/comments/{id}
+    // PUT http://localhost:8080/videominer/comments/{id}
     @Operation(summary = "Actualizar comentario", description = "Actualiza el texto y fecha de un comentario existente.", tags = {"Comments", "put"})
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Comentario actualizado con éxito"),
@@ -79,7 +79,7 @@ public class CommentController {
         repository.save(_comment);
     }
 
-    // DELETE http://localhost:8080/videominer/api/comments/{id}
+    // DELETE http://localhost:8080/videominer/comments/{id}
     @Operation(summary = "Eliminar comentario", description = "Elimina un comentario dado su id.", tags = {"Comments", "delete"})
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Comentario eliminado con éxito"),

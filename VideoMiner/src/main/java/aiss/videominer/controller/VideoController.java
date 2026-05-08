@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("videominer/api/videos")
+@RequestMapping("/videominer/videos")
 @Tag(name = "Videos", description = "API para la gestión de vídeos, sus comentarios y subtítulos")
 public class VideoController {
     @Autowired
     VideoRepository repository;
 
-    // GET http://localhost:8080/videominer/api/videos
+    // GET http://localhost:8080/videominer/videos
     @Operation(summary = "Obtener todos los vídeos", description = "Devuelve la lista completa de vídeos almacenados.", tags = {"Videos", "get"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista de vídeos obtenida con éxito",
@@ -38,7 +38,7 @@ public class VideoController {
     @GetMapping
     public List<Video> findAll() { return repository.findAll(); }
 
-    // GET http://localhost:8080/videominer/api/videos/{id}
+    // GET http://localhost:8080/videominer/videos/{id}
     @Operation(summary = "Obtener vídeo por ID", description = "Devuelve un vídeo concreto dado su id.", tags = {"Videos", "get"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Vídeo obtenido con éxito",
@@ -57,7 +57,7 @@ public class VideoController {
         return video.get();
     }
 
-    // GET http://localhost:8080/videominer/api/videos/{id}/captions
+    // GET http://localhost:8080/videominer/videos/{id}/captions
     @Operation(summary = "Obtener subtítulos de un vídeo", description = "Devuelve todos los subtítulos asociados a un vídeo dado su id.", tags = {"Videos", "get"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista de subtítulos obtenida con éxito",
@@ -76,7 +76,7 @@ public class VideoController {
         return video.get().getCaptions();
     }
 
-    // GET http://localhost:8080/videominer/api/videos/{id}/comments
+    // GET http://localhost:8080/videominer/videos/{id}/comments
     @Operation(summary = "Obtener comentarios de un vídeo", description = "Devuelve todos los comentarios asociados a un vídeo dado su id.", tags = {"Videos", "get"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista de comentarios obtenida con éxito",
@@ -147,7 +147,7 @@ public class VideoController {
         return caption;
     }
 
-    // PUT http://localhost:8080/videominer/api/videos/{id}
+    // PUT http://localhost:8080/videominer/videos/{id}
     @Operation(summary = "Actualizar vídeo", description = "Actualiza los datos de un vídeo existente.", tags = {"Videos", "put"})
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Vídeo actualizado con éxito"),
@@ -175,7 +175,7 @@ public class VideoController {
         repository.save(_video);
     }
 
-    // DELETE http://localhost:8080/videominer/api/videos/{id]
+    // DELETE http://localhost:8080/videominer/videos/{id]
     @Operation(summary = "Eliminar vídeo", description = "Elimina un vídeo dado su id.", tags = {"Videos", "delete"})
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Vídeo eliminado con éxito"),
