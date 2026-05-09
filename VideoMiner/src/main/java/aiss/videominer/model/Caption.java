@@ -5,7 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * @author Juan C. Alonso
@@ -16,7 +16,7 @@ public class Caption {
 
     @Id
     @JsonProperty("id")
-    @NotEmpty(message = "Caption id cannot be empty")
+    @NotBlank(message = "Caption id cannot be blank")
     private String id;
 
     @JsonProperty("name")
