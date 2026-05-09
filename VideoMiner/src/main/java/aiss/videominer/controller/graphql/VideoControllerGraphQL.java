@@ -80,9 +80,7 @@ public class VideoControllerGraphQL {
         Optional<Video> foundVideo = repository.findById(videoId);
         if (foundVideo.isPresent()) {
             Video video = foundVideo.get();
-            if (id == null || id.isBlank()) {
-                throw new IllegalArgumentException("Comment id is required");
-            }
+            requireId(id, "Comment");
             Comment comment = new Comment();
             comment.setId(id);
             comment.setText(text);
@@ -101,9 +99,7 @@ public class VideoControllerGraphQL {
         if (foundVideo.isPresent()) {
             Video video = foundVideo.get();
             Caption caption = new Caption();
-            if (id == null || id.isBlank()) {
-                throw new IllegalArgumentException("Caption id is required");
-            }
+            requireId(id, "Caption");
             caption.setId(id);
             caption.setName(name);
             caption.setLanguage(language);
@@ -112,6 +108,12 @@ public class VideoControllerGraphQL {
             return caption;
         } else {
             throw new VideoNotFoundException();
+        }
+    }
+
+    private void requireId(String id, String resource) {
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException(resource + " id is required");
         }
     }
 }
