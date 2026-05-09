@@ -24,6 +24,11 @@ import java.util.Optional;
 @Controller
 public class VideoControllerGraphQL {
 
+    private static final MethodParameter CREATE_COMMENT_ID_PARAMETER = new MethodParameter(
+            Objects.requireNonNull(ReflectionUtils.findMethod(VideoControllerGraphQL.class, "createComment", String.class, String.class, String.class, String.class)), 1);
+    private static final MethodParameter CREATE_CAPTION_ID_PARAMETER = new MethodParameter(
+            Objects.requireNonNull(ReflectionUtils.findMethod(VideoControllerGraphQL.class, "createCaption", String.class, String.class, String.class, String.class)), 1);
+
     @Autowired
     VideoRepository repository;
 
@@ -86,7 +91,7 @@ public class VideoControllerGraphQL {
         Optional<Video> foundVideo = repository.findById(videoId);
         if (foundVideo.isPresent()) {
             Video video = foundVideo.get();
-            requireId(id, "Comment");
+            requireId(id, "Comment", CREATE_COMMENT_ID_PARAMETER);
             Comment comment = new Comment();
             comment.setId(id);
             comment.setText(text);
@@ -105,7 +110,7 @@ public class VideoControllerGraphQL {
         if (foundVideo.isPresent()) {
             Video video = foundVideo.get();
             Caption caption = new Caption();
-            requireId(id, "Caption");
+            requireId(id, "Caption", CREATE_CAPTION_ID_PARAMETER);
             caption.setId(id);
             caption.setName(name);
             caption.setLanguage(language);
@@ -117,16 +122,11 @@ public class VideoControllerGraphQL {
         }
     }
 
-    private void requireId(String id, String resource) throws MethodArgumentNotValidException {
+    private void requireId(String id, String resource, MethodParameter methodParameter) throws MethodArgumentNotValidException {
         if (id == null || id.isBlank()) {
-            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(id, "id");
-            bindingResult.addError(new FieldError("id", "id", resource + " id is required"));
-            MethodParameter methodParameter = new MethodParameter(Objects.requireNonNull(ReflectionUtils.findMethod(VideoControllerGraphQL.class, "validateIdParameter", String.class)), 0);
+            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(new Object(), "input");
+            bindingResult.addError(new FieldError("input", "id", id, false, null, null, resource + " id is required"));
             throw new MethodArgumentNotValidException(methodParameter, bindingResult);
         }
-    }
-
-    @SuppressWarnings("unused")
-    private void validateIdParameter(String id) {
     }
 }
