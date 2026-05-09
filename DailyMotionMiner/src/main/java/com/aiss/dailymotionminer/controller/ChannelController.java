@@ -44,7 +44,7 @@ public class ChannelController {
         this.restTemplate = restTemplate;
     }
 
-    @Operation(summary = "Obtener canal por ID", description = "Recupera y transforma un canal de DailyMotion.", tags = {"channels", "get"})
+    @Operation(summary = "Obtener canal por ID", description = "Recupera y transforma un canal de DailyMotion.", tags = {"Channels", "get"})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Canal obtenido con éxito", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Parámetros incorrectos",
@@ -73,7 +73,7 @@ public class ChannelController {
         return channelETL.transform(videos, id);
     }
 
-    @Operation(summary = "Exportar canal a VideoMiner", tags = {"channels", "post"}, description = "Envía un canal a VideoMiner")
+    @Operation(summary = "Exportar canal a VideoMiner", tags = {"Channels", "post"}, description = "Envía un canal a VideoMiner")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Canal exportado con éxito", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Parámetros incorrectos",
@@ -92,7 +92,7 @@ public class ChannelController {
 
         VMChannel channel = getChannelById(id, maxVideos, maxPages);
 
-        restTemplate.postForObject(videoMinerBaseUrl + "/videominer/api/channels", channel, VMChannel.class);
+        restTemplate.postForObject(videoMinerBaseUrl + "/videominer/channels", channel, VMChannel.class);
         return channel;
     }
 }
