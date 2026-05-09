@@ -83,4 +83,13 @@ public class GlobalExceptionHandler {
                 .location(env.getField().getSourceLocation())
                 .build();
     }
+    @GraphQlExceptionHandler(MethodArgumentNotValidException.class)
+    public GraphQLError handleValidationGraphQL(MethodArgumentNotValidException ex, DataFetchingEnvironment env) {
+        return GraphQLError.newError()
+                .errorType(ErrorType.BAD_REQUEST)
+                .message("Datos inválidos")
+                .path(env.getExecutionStepInfo().getPath())
+                .location(env.getField().getSourceLocation())
+                .build();
+    }
 }
