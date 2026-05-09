@@ -101,7 +101,10 @@ public class VideoControllerGraphQL {
         if (foundVideo.isPresent()) {
             Video video = foundVideo.get();
             Caption caption = new Caption();
-            if (id != null) caption.setId(id);
+            if (id == null || id.isBlank()) {
+                throw new IllegalArgumentException("Caption id is required");
+            }
+            caption.setId(id);
             caption.setName(name);
             caption.setLanguage(language);
             video.getCaptions().add(caption);
