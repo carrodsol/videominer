@@ -52,8 +52,12 @@ public class VideoControllerGraphQL {
             video.setName(name);
             video.setDescription(description);
             video.setReleaseTime(releaseTime);
-            video.setComments(comments);
-            video.setCaptions(captions);
+            if (comments != null) {
+                video.setComments(comments);
+            }
+            if (captions != null) {
+                video.setCaptions(captions);
+            }
             video.setAuthor(author);
             repository.save(video);
             return video;
@@ -76,6 +80,9 @@ public class VideoControllerGraphQL {
         Optional<Video> foundVideo = repository.findById(videoId);
         if (foundVideo.isPresent()) {
             Video video = foundVideo.get();
+            if (id == null || id.isBlank()) {
+                throw new IllegalArgumentException("Comment id is required");
+            }
             Comment comment = new Comment();
             comment.setId(id);
             comment.setText(text);
@@ -105,4 +112,3 @@ public class VideoControllerGraphQL {
         }
     }
 }
-

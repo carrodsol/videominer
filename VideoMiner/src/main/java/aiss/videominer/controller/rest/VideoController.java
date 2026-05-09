@@ -170,8 +170,12 @@ public class VideoController {
         _video.setDescription(updatedVideo.getDescription());
         _video.setReleaseTime(updatedVideo.getReleaseTime());
         _video.setAuthor(updatedVideo.getAuthor());
-        _video.setComments(updatedVideo.getComments());
-        _video.setCaptions(updatedVideo.getCaptions());
+        if (updatedVideo.getComments() != null) {
+            _video.setComments(updatedVideo.getComments());
+        }
+        if (updatedVideo.getCaptions() != null) {
+            _video.setCaptions(updatedVideo.getCaptions());
+        }
         repository.save(_video);
     }
 
