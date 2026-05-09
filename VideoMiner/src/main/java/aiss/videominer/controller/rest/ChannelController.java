@@ -4,6 +4,7 @@ import aiss.videominer.exception.ChannelNotFoundException;
 import aiss.videominer.model.Channel;
 import aiss.videominer.model.Video;
 import aiss.videominer.repository.ChannelRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -25,6 +26,53 @@ import java.util.Optional;
 public class ChannelController {
     @Autowired
     ChannelRepository repository;
+
+    // GET http://localhost:8080/videominer/api/channels/{id}/private
+        @Operation(summary = "PREMIUM: Obtener canal por ID", description = "Devuelve un canal concreto dado su id. Si no eres usuario premium limita los videos obtenidos a 5, si eres premium devuelve hasta 50", 
+                   tags = {"Channels", "get", "Premium"})
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Canal obtenido con éxito",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Canal no encontrado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"Canal no encontrado\"}"), mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Error interno",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"Error interno del servidor\"}"), mediaType = "application/json"))
+    })
+    @GetMapping("/{id}/private")
+    public Channel findOnePrivate(@PathVariable String id, HttpServletRequest request) throws ChannelNotFoundException {
+        Optional<Channel> channelOpt = repository.findById(id);
+        if (channelOpt.isEmpty()) {
+            throw new ChannelNotFoundException();
+        }
+
+        Channel channel = channelOpt.get();
+
+
+        Object premiumAttr = request.getAttribute("isPremiumUser");
+        boolean isPremium = premiumAttr != null && (boolean) premiumAttr;
+
+
+        List<Video> videos = channel.getVideos();
+
+        if (videos != null && !videos.isEmpty()) {
+            int maxVideos;
+
+            if (isPremium) {
+                maxVideos = 50;
+                System.out.println("Petición VIP: Devolviendo hasta 50 vídeos.");
+            } else {
+                maxVideos = 5;
+                System.out.println("Petición Gratuita: Devolviendo máximo 5 vídeos.");
+            }
+
+
+            if (videos.size() > maxVideos) {
+                channel.setVideos(videos.subList(0, maxVideos));
+            }
+        }
+
+        return channel;
+    }
 
     // GET http://localhost:8080/videominer/channels
     @Operation(summary = "Obtener todos los canales", description = "Devuelve la lista completa de canales.", tags = {"Channels", "get"})

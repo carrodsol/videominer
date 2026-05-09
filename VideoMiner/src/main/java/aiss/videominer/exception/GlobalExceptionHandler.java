@@ -3,6 +3,7 @@ package aiss.videominer.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,6 +35,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
     }
 
+    // Error 401: Se activa cuando falta la cabecera apikey
+    @ExceptionHandler({HttpClientErrorException.Unauthorized.class, MissingRequestHeaderException.class})
+    @ResponseBody
+    public ResponseEntity<Object> handleUnauthorized(Exception ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "No autorizado: falta la API Key en los headers");
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    // Error 400: Se activa por parámetros incorrectos (como maxVideos o maxPages mal escritos)
+    @ExceptionHandler({HttpClientErrorException.BadRequest.class, MethodArgumentTypeMismatchException.class})
+    @ResponseBody
+    public ResponseEntity<Object> handleBadRequest(Exception ex) {
     // Error 404
     @ExceptionHandler({HttpClientErrorException.NotFound.class, NoResourceFoundException.class})
     public ResponseEntity<Object> handleNotFound(Exception ex) {
