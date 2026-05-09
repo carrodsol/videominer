@@ -28,12 +28,6 @@ public class CaptionController {
     @Value("${videominer.api.key:}")
     private String configuredApiKey;
 
-    // GET http://localhost:8080/videominer/api/captions
-    @GetMapping
-    public List<Caption> findAll() { return repository.findAll(); }
-
-
-    // GET http://localhost:8080/videominer/api/captions/{id}
     // GET http://localhost:8080/videominer/captions
     @Operation(summary = "Obtener todos los subtítulos", description = "Devuelve la lista completa de subtítulos.", tags = {"Captions", "get"})
     @ApiResponses({
