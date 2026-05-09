@@ -7,12 +7,18 @@ import aiss.videominer.model.User;
 import aiss.videominer.model.Video;
 import aiss.videominer.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.MethodParameter;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -76,7 +82,7 @@ public class VideoControllerGraphQL {
     }
 
     @MutationMapping
-    public Comment createComment(@Argument String videoId, @Argument String id, @Argument String text, @Argument String createdOn) throws VideoNotFoundException {
+    public Comment createComment(@Argument String videoId, @Argument String id, @Argument String text, @Argument String createdOn) throws VideoNotFoundException, MethodArgumentNotValidException {
         Optional<Video> foundVideo = repository.findById(videoId);
         if (foundVideo.isPresent()) {
             Video video = foundVideo.get();
@@ -94,7 +100,7 @@ public class VideoControllerGraphQL {
     }
 
     @MutationMapping
-    public Caption createCaption(@Argument String videoId, @Argument String id, @Argument String name, @Argument String language) throws VideoNotFoundException {
+    public Caption createCaption(@Argument String videoId, @Argument String id, @Argument String name, @Argument String language) throws VideoNotFoundException, MethodArgumentNotValidException {
         Optional<Video> foundVideo = repository.findById(videoId);
         if (foundVideo.isPresent()) {
             Video video = foundVideo.get();
@@ -111,9 +117,16 @@ public class VideoControllerGraphQL {
         }
     }
 
-    private void requireId(String id, String resource) {
+    private void requireId(String id, String resource) throws MethodArgumentNotValidException {
         if (id == null || id.isBlank()) {
-            throw new IllegalArgumentException(resource + " id is required");
+            BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(id, "id");
+            bindingResult.addError(new FieldError("id", "id", resource + " id is required"));
+            MethodParameter methodParameter = new MethodParameter(Objects.requireNonNull(ReflectionUtils.findMethod(VideoControllerGraphQL.class, "validateIdParameter", String.class)), 0);
+            throw new MethodArgumentNotValidException(methodParameter, bindingResult);
         }
+    }
+
+    @SuppressWarnings("unused")
+    private void validateIdParameter(String id) {
     }
 }
