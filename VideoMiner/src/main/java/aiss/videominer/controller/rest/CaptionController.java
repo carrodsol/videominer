@@ -1,4 +1,4 @@
-package aiss.videominer.controller;
+package aiss.videominer.controller.rest;
 
 import aiss.videominer.exception.CaptionNotFoundException;
 import aiss.videominer.model.Caption;
@@ -7,11 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.util.List;
 import java.util.Optional;
 

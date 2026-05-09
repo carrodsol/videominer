@@ -1,4 +1,4 @@
-package aiss.videominer.controller;
+package aiss.videominer.controller.rest;
 
 import aiss.videominer.exception.ChannelNotFoundException;
 import aiss.videominer.model.Channel;

@@ -1,4 +1,4 @@
-package aiss.videominer.controller;
+package aiss.videominer.controller.rest;
 
 import aiss.videominer.exception.CommentNotFoundException;
 import aiss.videominer.model.Comment;
