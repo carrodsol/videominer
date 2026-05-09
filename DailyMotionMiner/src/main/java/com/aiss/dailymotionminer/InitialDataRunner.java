@@ -24,7 +24,7 @@ public class InitialDataRunner implements CommandLineRunner {
 
         try {
             Thread.sleep(15000);
-            System.out.println("¡Lanzando la petición a PeerTube y enviando a VideoMiner!");
+            System.out.println("¡Lanzando la petición a DailyMotion y enviando a VideoMiner!");
             c.postChannelToVideoMiner("music",10,2);
             c.postChannelToVideoMiner("shortfilms",10,2);
 
