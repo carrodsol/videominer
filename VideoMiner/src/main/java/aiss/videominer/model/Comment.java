@@ -2,6 +2,7 @@ package aiss.videominer.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -13,6 +14,8 @@ public class Comment {
 
     @Id
     @JsonProperty("id")
+    @NotNull(message = "Comment id cannot be null")
+    @NotBlank(message = "Comment id cannot be blank")
     private String id;
 
     @JsonProperty("text")

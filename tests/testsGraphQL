@@ -1,0 +1,281 @@
+# ==========================================
+# MUTACIONES DE CANALES (CHANNELS)
+# ==========================================
+
+mutation CreateChannel {
+    createChannel(
+        id: "c-123"
+        name: "Mi Nuevo Canal"
+        description: "Descripción de prueba"
+        createdTime: "2026-05-09T10:00:00Z"
+    ) {
+        id
+        name
+        description
+        createdTime
+    }
+}
+
+mutation UpdateChannel {
+    updateChannel(
+        id: "c-123"
+        name: "Canal Actualizado"
+        description: "Nueva descripción"
+        createdTime: "2026-05-09T12:00:00Z"
+    ) {
+        id
+        name
+        description
+    }
+}
+
+mutation DeleteChannel {
+    deleteChannel(id: "c-123")
+}
+
+
+# ==========================================
+# MUTACIONES DE VIDEOS
+# ==========================================
+
+mutation CreateVideo {
+    createVideo(
+        channelId: "c-123"
+        id: "v-123"
+        name: "Mi Primer Video"
+        description: "Aprendiendo GraphQL"
+        releaseTime: "2026-05-09T15:00:00Z"
+        author: {
+            name: "Juan Perez"
+            user_link: "http://example.com/user/1"
+            picture_link: "http://example.com/pic.jpg"
+        }
+    ) {
+        id
+        name
+        description
+        releaseTime
+        author {
+            name
+        }
+    }
+}
+
+mutation UpdateVideo {
+    updateVideo(
+        id: "v-123"
+        name: "Video Actualizado"
+        description: "Descripción actualizada"
+        releaseTime: "2026-05-09T15:00:00Z"
+    ) {
+        id
+        name
+        description
+    }
+}
+
+mutation DeleteVideo {
+    deleteVideo(id: "v-123")
+}
+
+
+# ==========================================
+# MUTACIONES DE COMENTARIOS (COMMENTS)
+# ==========================================
+
+mutation CreateComment {
+    createComment(
+        videoId: "v-123"
+        id: "com-1"
+        text: "¡Excelente video!"
+        createdOn: "2026-05-09T16:00:00Z"
+    ) {
+        id
+        text
+        createdOn
+    }
+}
+
+mutation UpdateComment {
+    updateComment(
+        id: "com-1"
+        text: "Comentario editado: ¡Muy buen video!"
+        createdOn: "2026-05-09T16:05:00Z"
+    ) {
+        id
+        text
+    }
+}
+
+mutation DeleteComment {
+    deleteComment(id: "com-1")
+}
+
+
+# ==========================================
+# MUTACIONES DE SUBTÍTULOS (CAPTIONS)
+# ==========================================
+
+mutation CreateCaption {
+    createCaption(
+        videoId: "v-123"
+        id: "cap-1"
+        name: "Subtítulos en Español"
+        language: "es"
+    ) {
+        id
+        name
+        language
+    }
+}
+
+mutation UpdateCaption {
+    updateCaption(
+        id: "cap-1"
+        name: "Subtítulos en Español (España)"
+        language: "es-ES"
+    ) {
+        id
+        name
+        language
+    }
+}
+
+mutation DeleteCaption {
+    deleteCaption(id: "cap-1")
+}
+# ==========================================
+# CONSULTAS (QUERIES) DE CANALES
+# ==========================================
+
+query GetAllChannels {
+    channels {
+        id
+        name
+        description
+        createdTime
+        videos {
+            id
+            name
+        }
+    }
+}
+
+query GetChannelById {
+    channel(id: "c-123") {
+        id
+        name
+        description
+        createdTime
+    }
+}
+
+
+# ==========================================
+# CONSULTAS DE VIDEOS
+# ==========================================
+
+query GetAllVideos {
+    videos {
+        id
+        name
+        releaseTime
+        author {
+            name
+            user_link
+        }
+        captions {
+            id
+            name
+            language
+        }
+    }
+}
+
+query GetVideoById {
+    video(id: "v-123") {
+        id
+        name
+        description
+        releaseTime
+        author {
+            name
+        }
+        comments {
+            id
+            text
+            createdOn
+        }
+        captions {
+            id
+            name
+            language
+        }
+    }
+}
+
+query GetVideosByChannel {
+    videosByChannel(channelId: "c-123") {
+        id
+        name
+        releaseTime
+    }
+}
+
+
+# ==========================================
+# CONSULTAS DE COMENTARIOS
+# ==========================================
+
+query GetAllComments {
+    comments {
+        id
+        text
+        createdOn
+    }
+}
+
+query GetCommentById {
+    comment(id: "com-1") {
+        id
+        text
+        createdOn
+    }
+}
+
+query GetCommentsByVideo {
+    commentsByVideo(videoId: "v-123") {
+        id
+        text
+        createdOn
+    }
+}
+
+
+# ==========================================
+# CONSULTAS DE SUBTÍTULOS
+# ==========================================
+
+query GetAllCaptions {
+    captions {
+        id
+        name
+        language
+    }
+}
+
+query GetCaptionById {
+    caption(id: "cap-1") {
+        id
+        name
+        language
+    }
+}
+
+query GetCaptionsByVideo {
+    captionsByVideo(videoId: "v-123") {
+        id
+        name
+        language
+    }
+}

@@ -24,7 +24,7 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 // Ruta: localhost:8081/DailyMotion/api/v1/channels/{id}
 @Tag(name = "Channels", description = "API encargada de la gestión y exportación de canales de DailyMotion")
-@RequestMapping("/DailyMotion/api/v1/channels")
+@RequestMapping("/dailymotion/api/v1/channels")
 public class ChannelController {
 
     private final VideoService videoService;
@@ -32,8 +32,8 @@ public class ChannelController {
     private final ChannelETL channelETL;
     private final RestTemplate restTemplate;
 
-    @Value("${VideoMiner.uri}")
-    private String videoMinerUri;
+    @Value("${videominer.base.url}")
+    private String videoMinerBaseUrl;
 
     @Autowired
     public ChannelController(VideoService videoService,
@@ -91,8 +91,8 @@ public class ChannelController {
             @RequestParam(defaultValue = "2") Integer maxPages) {
 
         VMChannel channel = getChannelById(id, maxVideos, maxPages);
-        restTemplate.postForObject(videoMinerUri + "/channels", channel, VMChannel.class);
 
+        restTemplate.postForObject(videoMinerBaseUrl + "/videominer/channels", channel, VMChannel.class);
         return channel;
     }
 }
