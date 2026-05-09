@@ -1,0 +1,138 @@
+type Channel {
+    id: ID!
+    name: String!
+    description: String
+    createdTime: String!
+    videos: [Video]!
+}
+
+type Video {
+    id: ID!
+    name: String!
+    description: String
+    releaseTime: String!
+    author: User
+    comments: [Comment]
+    captions: [Caption]
+}
+
+type User {
+    id: ID
+    name: String
+    user_link: String
+    picture_link: String
+}
+
+type Comment {
+    id: ID!
+    text: String
+    createdOn: String
+}
+
+type Caption {
+    id: ID!
+    name: String
+    language: String
+}
+
+input CommentInput {
+    id: ID
+    text: String
+    createdOn: String
+}
+input CaptionInput {
+    id: ID
+    name: String
+    language: String
+}
+input UserInput {
+    name: String
+    user_link: String
+    picture_link: String
+}
+""" Consultas """
+type Query {
+
+    """ Obtiene la lista de todos los canales. """
+    channels: [Channel]!
+
+    """ Obtiene un canal específico por su ID. """
+    channel(id: ID!): Channel
+
+    """ Obtiene la lista de videos de un canal específico. """
+    videosByChannel(channelId: ID!): [Video]
+
+    """ Obtiene la lista de todos los videos. """
+    videos: [Video]!
+
+    """ Obtiene un video específico por su ID. """
+    video(id: ID!): Video
+
+    """ Obtiene la lista de comentarios de un video específico. """
+    commentsByVideo(videoId: ID!): [Comment]
+
+    """ Obtiene la lista de subtítulos de un video específico. """
+    captionsByVideo(videoId: ID!): [Caption]
+
+    """ Obtiene la lista de todos los subtítulos. """
+    captions: [Caption]!
+
+    """ Obtiene un subtítulo específico por su ID. """
+    caption(id: ID!): Caption
+
+    """ Obtiene la lista de todos los comentarios. """
+    comments: [Comment]!
+
+    """ Obtiene un comentario específico por su ID. """
+    comment(id: ID!): Comment
+}
+
+input VideoInput {
+    id: ID
+    name: String!
+    description: String
+    releaseTime: String!
+    comments: [CommentInput]
+    captions: [CaptionInput]
+    author: UserInput
+}
+
+""" Mutaciones """
+type Mutation {
+
+    """ Crea un nuevo canal. """
+    createChannel(id: ID, name: String!, description: String, createdTime: String!, videos: [VideoInput]): Channel
+
+    """ Actualiza un canal existente. """
+    updateChannel(id: ID!, name: String!, description: String, createdTime: String!, videos: [VideoInput] ): Channel
+
+    """ Elimina un canal por su ID. """
+    deleteChannel(id: ID!): Boolean
+
+    """ Crea un nuevo video asociado a un canal. """
+    createVideo(channelId: ID!, id: ID, name: String!, description: String, releaseTime: String!, comments: [CommentInput], captions: [CaptionInput], author: UserInput): Video
+
+    """ Actualiza un video existente. """
+    updateVideo(id: ID!, name: String!, description: String, releaseTime: String!, comments: [CommentInput], captions: [CaptionInput], author: UserInput): Video
+
+    """ Elimina un video por su ID. """
+    deleteVideo(id: ID!): Boolean
+
+    """ Crea un nuevo comentario asociado a un video. """
+    createComment(videoId: ID!, id: ID, text: String, createdOn: String ): Comment
+
+    """ Actualiza un comentario existente. """
+    updateComment(id: ID, text: String, createdOn: String): Comment
+
+    """ Elimina un comentario por su ID. """
+    deleteComment(id: ID!): Boolean
+
+    """ Crea un nuevo subtítulo asociado a un video. """
+    createCaption(videoId: ID!, id: ID, name: String, language: String): Caption
+
+    """ Actualiza un subtítulo existente. """
+    updateCaption(id: ID!, name: String, language: String): Caption
+
+    """ Elimina un subtítulo por su ID. """
+    deleteCaption(id: ID!): Boolean
+}

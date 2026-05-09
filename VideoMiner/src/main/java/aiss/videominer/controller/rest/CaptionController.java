@@ -1,4 +1,4 @@
-package aiss.videominer.controller;
+package aiss.videominer.controller.rest;
 
 import aiss.videominer.exception.CaptionNotFoundException;
 import aiss.videominer.model.Caption;
