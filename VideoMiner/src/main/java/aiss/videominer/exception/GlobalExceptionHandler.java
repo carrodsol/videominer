@@ -36,18 +36,13 @@ public class GlobalExceptionHandler {
     }
 
     // Error 401: Se activa cuando falta la cabecera apikey
-    @ExceptionHandler({HttpClientErrorException.Unauthorized.class, MissingRequestHeaderException.class})
-    @ResponseBody
+    @ExceptionHandler({HttpClientErrorException.Unauthorized.class, MissingRequestHeaderException.class, UnauthorizedGraphQLException.class})
     public ResponseEntity<Object> handleUnauthorized(Exception ex) {
         Map<String, Object> body = new HashMap<>();
         body.put("message", "No autorizado: falta la API Key en los headers");
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
 
-    // Error 400: Se activa por parámetros incorrectos (como maxVideos o maxPages mal escritos)
-    @ExceptionHandler({HttpClientErrorException.BadRequest.class, MethodArgumentTypeMismatchException.class})
-    @ResponseBody
-    public ResponseEntity<Object> handleBadRequest(Exception ex) {
     // Error 404
     @ExceptionHandler({HttpClientErrorException.NotFound.class, NoResourceFoundException.class})
     public ResponseEntity<Object> handleNotFound(Exception ex) {

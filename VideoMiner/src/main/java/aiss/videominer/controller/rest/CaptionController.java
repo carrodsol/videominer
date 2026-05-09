@@ -25,9 +25,6 @@ public class CaptionController {
     @Autowired
     CaptionRepository repository;
 
-    @Value("${videominer.api.key:}")
-    private String configuredApiKey;
-
     // GET http://localhost:8080/videominer/captions
     @Operation(summary = "Obtener todos los subtítulos", description = "Devuelve la lista completa de subtítulos.", tags = {"Captions", "get"})
     @ApiResponses({
