@@ -81,6 +81,27 @@ curl -X POST http://localhost:8080/videominer/channels \
 - `aiss.videominer.security.WebConfig#addInterceptors(...)`: aplica el interceptor a `/videominer/**`.
 - `aiss.videominer.security.ApiKeyInterceptor#preHandle(...)`: valida `Authorization: Bearer <token>` y devuelve `401` si falta la clave en `POST`, `PUT` o `DELETE`.
 
+## Despliegue en la Nube (Render)
+
+Tanto VideoMiner como PeerTubeMiner y DailymotionMiner se encuentran desplegados en la plataforma [Render](https://render.com/).
+<img src="RenderLogo.png" alt="Render logo" width="500" align="right"/>
+### Arquitectura basada en Contenedores (Docker)
+Para garantizar que los servicios se ejecutan correctamente en la nube, cada servicio cuenta con un `Dockerfile`.
+Render detecta y construye estas imágenes de Docker automáticamente con cada **commit** en el repositorio.
+
+Además, se utiliza una variable de entorno en PeerTubeMiner y DailyMotionMiner que sustituye `localhost` por la URI de VideoMiner.
+
+### Persistencia y Carga Inicial de Datos (Data Seeding)
+El despliegue se realiza utilizando el plan gratuito de Render. En consecuencia, las instancias se apagan tras 15min de inactividad.
+Dado que VideoMiner utiliza una base de datos **H2 en memoria, todos los datos se pierden cada vez que el servidor entra en suspensión o se redespliega**.
+
+Para mitigar esta limitación, se ha implementado un **poblado automático de datos**:
+
+- `PeerTubeMiner/src/main/java/com/aiss/peertubeminer/InitialDataRunner.java` 
+- `DailyMotionMiner/src/main/java/com/aiss/dailymotionminer/InitialDataRunner.java`
+
+Gracias a esto, la base de datos de VideoMiner cuenta con información mínima inicial de forma automática cada vez que los sistemas se despiertan, estando lista para ser consultada inmediatamente vía REST o GraphQL.
+
 ## Pruebas Postman
 
 En la carperta `tests` se encuentran varios archivos listos para importar como una colección de pruebas Postman:
