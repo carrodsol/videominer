@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -97,11 +98,14 @@ public class VideoController {
 
     // POST http://localhost:8080/videominer/videos/{id}/comments
     @Operation(summary = "Añadir comentario a un vídeo", description = "Crea un nuevo comentario y lo asocia al vídeo indicado.", tags = {"Comments", "post"})
+    @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Comentario añadido con éxito",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Datos inválidos\"}"), mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "No autorizado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"No autorizado: falta la API Key en los headers\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Vídeo no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Vídeo no encontrado\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",
@@ -123,11 +127,14 @@ public class VideoController {
 
     // POST http://localhost:8080/videominer/videos/{id}/captions
     @Operation(summary = "Añadir subtítulo a un vídeo", description = "Crea un nuevo subtítulo y lo asocia al vídeo indicado.", tags = {"Captions", "post"})
+    @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Subtítulo añadido con éxito",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Datos inválidos\"}"), mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "No autorizado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"No autorizado: falta la API Key en los headers\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Vídeo no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Vídeo no encontrado\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",
@@ -149,10 +156,13 @@ public class VideoController {
 
     // PUT http://localhost:8080/videominer/videos/{id}
     @Operation(summary = "Actualizar vídeo", description = "Actualiza los datos de un vídeo existente.", tags = {"Videos", "put"})
+    @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Vídeo actualizado con éxito"),
             @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Datos inválidos\"}"), mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "No autorizado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"No autorizado: falta la API Key en los headers\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Vídeo no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Vídeo no encontrado\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",
@@ -181,8 +191,11 @@ public class VideoController {
 
     // DELETE http://localhost:8080/videominer/videos/{id]
     @Operation(summary = "Eliminar vídeo", description = "Elimina un vídeo dado su id.", tags = {"Videos", "delete"})
+    @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Vídeo eliminado con éxito"),
+            @ApiResponse(responseCode = "401", description = "No autorizado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"No autorizado: falta la API Key en los headers\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Vídeo no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Vídeo no encontrado\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",

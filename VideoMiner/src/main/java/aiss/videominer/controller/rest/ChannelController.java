@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -125,11 +126,14 @@ public class ChannelController {
 
     // POST http://localhost:8080/videominer/channels
     @Operation(summary = "Crear canal", description = "Crea y almacena un nuevo canal.", tags = {"Channels", "post"})
+    @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Canal creado con éxito",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Datos inválidos\"}"), mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "No autorizado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"No autorizado: falta la API Key en los headers\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Error interno del servidor\"}"), mediaType = "application/json"))
     })
@@ -141,11 +145,14 @@ public class ChannelController {
 
     // POST http://localhost:8080/videominer/channels/{id}/videos
     @Operation(summary = "Añadir vídeo a un canal", description = "Crea un nuevo vídeo y lo asocia al canal indicado.", tags = {"Videos", "post"})
+    @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Vídeo añadido con éxito",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Datos inválidos\"}"), mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "No autorizado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"No autorizado: falta la API Key en los headers\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Canal no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Canal no encontrado\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",
@@ -167,10 +174,13 @@ public class ChannelController {
 
     // PUT http://localhost:8080/videominer/channels/{id}
     @Operation(summary = "Actualizar canal", description = "Actualiza los datos de un canal existente.", tags = {"Channels", "put"})
+    @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Canal actualizado con éxito"),
             @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Datos inválidos\"}"), mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "No autorizado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"No autorizado: falta la API Key en los headers\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Canal no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Canal no encontrado\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",
@@ -193,8 +203,11 @@ public class ChannelController {
 
     // DELETE http://localhost:8080/videominer/channels/{id}
     @Operation(summary = "Eliminar canal", description = "Elimina un canal dado su id.", tags = {"Channels", "delete"})
+    @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Canal eliminado con éxito"),
+            @ApiResponse(responseCode = "401", description = "No autorizado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"No autorizado: falta la API Key en los headers\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Canal no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Canal no encontrado\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",

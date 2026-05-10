@@ -17,13 +17,16 @@ public class GraphQlApiKeyInterceptor implements WebGraphQlInterceptor {
     @Value("${videominer.api.key}")
     private String apiKey;
 
+    @Value("${videominer.api.key.enabled:true}")
+    private boolean isApiKeyEnabled;
+
     @NonNull
     @Override
     public Mono<WebGraphQlResponse> intercept(@NonNull WebGraphQlRequest request, @NonNull Chain chain) {
         String document = request.getDocument();
         
         // Comprobamos si la petición GraphQL es una mutación
-        if (document.trim().startsWith("mutation")) {
+        if (isApiKeyEnabled && document.trim().startsWith("mutation")) {
             List<String> authHeaders = request.getHeaders().get("Authorization");
             boolean hasValidKey = false;
 
@@ -43,7 +46,7 @@ public class GraphQlApiKeyInterceptor implements WebGraphQlInterceptor {
             }
         }
         
-        // Si no es mutación, o si la key es válida, continuamos con la ejecución
+        // Si no es mutación, o si la key es válida o si la autenticación está desactivada, continuamos con la ejecución
         return chain.next(request);
     }
 }

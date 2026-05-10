@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,10 +58,13 @@ public class CaptionController {
 
     // PUT http://localhost:8080/videominer/captions/{id}
     @Operation(summary = "Actualizar subtítulo", description = "Actualiza los datos de un subtítulo existente.", tags = {"Captions", "put"})
+    @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Subtítulo actualizado con éxito"),
             @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Datos inválidos\"}"), mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "No autorizado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"No autorizado: falta la API Key en los headers\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Subtítulo no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Subtítulo no encontrado\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",
@@ -81,8 +85,11 @@ public class CaptionController {
 
     // DELETE http://localhost:8080/videominer/captions/{id}
     @Operation(summary = "Eliminar subtítulo", description = "Elimina un subtítulo dado su id.", tags = {"Captions", "delete"})
+    @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Subtítulo eliminado con éxito"),
+            @ApiResponse(responseCode = "401", description = "No autorizado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"No autorizado: falta la API Key en los headers\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Subtítulo no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Subtítulo no encontrado\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",

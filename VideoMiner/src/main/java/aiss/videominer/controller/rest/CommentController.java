@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,10 +58,13 @@ public class CommentController {
 
     // PUT http://localhost:8080/videominer/comments/{id}
     @Operation(summary = "Actualizar comentario", description = "Actualiza el texto y fecha de un comentario existente.", tags = {"Comments", "put"})
+    @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Comentario actualizado con éxito"),
             @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Datos inválidos\"}"), mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "No autorizado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"No autorizado: falta la API Key en los headers\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Comentario no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Comentario no encontrado\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",
@@ -81,8 +85,11 @@ public class CommentController {
 
     // DELETE http://localhost:8080/videominer/comments/{id}
     @Operation(summary = "Eliminar comentario", description = "Elimina un comentario dado su id.", tags = {"Comments", "delete"})
+    @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Comentario eliminado con éxito"),
+            @ApiResponse(responseCode = "401", description = "No autorizado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"No autorizado: falta la API Key en los headers\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Comentario no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Comentario no encontrado\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",

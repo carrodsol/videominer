@@ -13,6 +13,9 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
     @Value("${videominer.api.key}")
     private String apiKey;
 
+    @Value("${videominer.api.key.enabled:true}")
+    private boolean isApiKeyEnabled;
+
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
 
@@ -28,7 +31,7 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
             }
         }
 
-        if (httpMethod.equals("POST") || httpMethod.equals("PUT") || httpMethod.equals("DELETE")) {
+        if (isApiKeyEnabled && (httpMethod.equals("POST") || httpMethod.equals("PUT") || httpMethod.equals("DELETE"))) {
             if (!hasValidKey) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("401 Unauthorized: Necesitas una API Key valida para hacer un " + httpMethod);
