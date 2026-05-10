@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 @Tag(name = "Channels", description = "API encargada de la gestión y exportación de canales de PeerTube")
-@RequestMapping("/peertube/api/v1/channels")
+@RequestMapping("/peertube/channels")
 public class ChannelController {
 
     @Autowired
@@ -81,7 +81,7 @@ public class ChannelController {
         }
         HttpEntity<VMChannel> requestEntity = new HttpEntity<>(channel, headers);
 
-        restTemplate.postForObject(videoMinerBaseUrl + "/videominer/channels", requestEntity, VMChannel.class);
+        restTemplate.postForObject(videoMinerBaseUrl + "/channels", requestEntity, VMChannel.class);
         return channel;
     }
 }

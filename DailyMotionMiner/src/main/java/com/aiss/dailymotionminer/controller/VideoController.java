@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @Tag(name = "Videos", description = "API encargada del manejo de videos de DailyMotion")
-@RequestMapping("/dailymotion/api/v1/videos")
+@RequestMapping("/dailymotion/videos")
 public class VideoController {
 
     private final VideoService videoService;

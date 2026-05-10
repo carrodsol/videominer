@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-// Ruta: localhost:8081/DailyMotion/api/v1/channels/{id}
+// Ruta: localhost:8081/DailyMotion/channels/{id}
 @Tag(name = "Channels", description = "API encargada de la gestión y exportación de canales de DailyMotion")
-@RequestMapping("/dailymotion/api/v1/channels")
+@RequestMapping("/dailymotion/channels")
 public class ChannelController {
 
     private final VideoService videoService;
@@ -106,7 +106,7 @@ public class ChannelController {
         }
         HttpEntity<VMChannel> requestEntity = new HttpEntity<>(channel, headers);
 
-        restTemplate.postForObject(videoMinerBaseUrl + "/videominer/channels", requestEntity, VMChannel.class);
+        restTemplate.postForObject(videoMinerBaseUrl + "/channels", requestEntity, VMChannel.class);
         return channel;
     }
 }
