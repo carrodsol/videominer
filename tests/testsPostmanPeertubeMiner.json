@@ -64,7 +64,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8082/peertube/api/v1/channels/tv?maxVideos=10&maxComments=2",
+          "raw": "http://localhost:8082/peertube/channels/tv?maxVideos=10&maxComments=2",
           "protocol": "http",
           "host": [
             "localhost"
@@ -72,8 +72,6 @@
           "port": "8082",
           "path": [
             "peertube",
-            "api",
-            "v1",
             "channels",
             "tv"
           ],
@@ -110,7 +108,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8082/peertube/api/v1/channels/canal_que_no_existe_123",
+          "raw": "http://localhost:8082/peertube/channels/canal_que_no_existe_123",
           "protocol": "http",
           "host": [
             "localhost"
@@ -118,8 +116,6 @@
           "port": "8082",
           "path": [
             "peertube",
-            "api",
-            "v1",
             "channels",
             "noExiste"
           ]
@@ -146,7 +142,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8082/peertube/api/v1/channels/tv?maxVideos=letras",
+          "raw": "http://localhost:8082/peertube/channels/tv?maxVideos=letras",
           "protocol": "http",
           "host": [
             "localhost"
@@ -154,8 +150,6 @@
           "port": "8082",
           "path": [
             "peertube",
-            "api",
-            "v1",
             "channels",
             "tv"
           ],
@@ -220,7 +214,7 @@
         "method": "POST",
         "header": [],
         "url": {
-          "raw": "http://localhost:8082/peertube/api/v1/channels/tv?maxVideos=10&maxComments=2",
+          "raw": "http://localhost:8082/peertube/channels/tv?maxVideos=10&maxComments=2",
           "protocol": "http",
           "host": [
             "localhost"
@@ -228,8 +222,6 @@
           "port": "8082",
           "path": [
             "peertube",
-            "api",
-            "v1",
             "channels",
             "tv"
           ],
