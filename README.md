@@ -1,5 +1,32 @@
-# VideoMiner
-El objetivo del proyecto es desarrollar una herramienta de minería de datos que permita cargar, procesar y analizar información sobre creadores de contenido multimedia alojados en distintas plataformas.
+# Proyecto de Integración AISS
+
+El objetivo del proyecto es desarrollar una herramienta de minería de datos que permita cargar, procesar y analizar información sobre contenido multimedia alojado en distintas plataformas.
+Se compone de tres microservicios principales:
+
+## VideoMiner
+Almacena, unifica y expone todos los datos multimedia recopilados de las distintas plataformas.
+* **Operaciones HTTP soportadas:**
+  * `GET`: Consultar canales, vídeos, subtítulos y comentarios.
+  * `POST`: Crear nuevos registros (**protegido con API Key**).
+  * `PUT`: Actualizar información existente (**protegido con API Key**).
+  * `DELETE`: Eliminar registros (**protegido con API Key**).
+
+## PeerTubeMiner
+<img alt="GraphQL Logo" align="right" src="https://imgs.search.brave.com/5igeq6DBxKvmG2dbuutHEwCFaEVUQrymxMF1GirkN3o/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuc3RpY2twbmcu/Y29tL2ltYWdlcy82/MjNhZmNjOTI3ZDQ5/NDZhY2VhZTJmYjku/cG5n" width="18%" />
+
+Servicio 'Consumer' que extrae datos de PeerTube, los formatea y los envía al sistema central (**ETL**).
+* **Operaciones HTTP que realiza:**
+  * `GET`: Obtener datos de canales y vídeos directamente desde la API pública de PeerTube.
+  * `POST`: Enviar los datos extraídos y transformados hacia la base de datos de VideoMiner.
+
+
+## DailyMotionMiner
+<img alt="GraphQL Logo" align="right" src="https://imgs.search.brave.com/1_bGfK70iHxzzF8eeY6OQYAj5zkgDTM7VpdgNtYkWY0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9sb2dv/ZG93bmxvYWQub3Jn/L3dwLWNvbnRlbnQv/dXBsb2Fkcy8yMDE4/LzExL2RhaWx5bW90/aW9uLWxvZ28ucG5n" width="35%" />
+
+Servicio 'Consumer' que extrae datos de DailyMotion, los formatea y los envía al sistema central  (**ETL**).
+* **Operaciones HTTP que realiza:**
+  * `GET`: Recuperar información de canales, vídeos y comentarios desde la API de Dailymotion.
+  * `POST`: Inyectar la información recolectada y transformada a VideoMiner.
 
 ## GraphQL 
 
