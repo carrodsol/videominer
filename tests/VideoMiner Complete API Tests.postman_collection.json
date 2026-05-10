@@ -1,0 +1,2583 @@
+{
+  "info": {
+    "_postman_id": "a967390e-9ab5-4271-b825-3997dd686955",
+    "name": "VideoMiner Complete API Tests",
+    "description": "Suite completa de pruebas para la API VideoMiner, incluyendo todas las operaciones de los controladores.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53234590",
+    "_collection_link": "https://go.postman.co/collection/53234590-a967390e-9ab5-4271-b825-3997dd686955?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "0. DailyMotionMiner y PeerTubeMiner",
+      "item": [
+        {
+          "name": "DailyMotion GET Videos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"El código de estado es 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Todos los vídeos deben tener todas las propiedades\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    for(var i=0; i < jsonData.length; i++) {\r",
+                  "        pm.expect(jsonData[i]).to.have.property(\"id\");\r",
+                  "        pm.expect(jsonData[i]).to.have.property(\"name\")\r",
+                  "        pm.expect(jsonData[i]).to.have.property(\"description\")\r",
+                  "        pm.expect(jsonData[i]).to.have.property(\"user\")\r",
+                  "        pm.expect(jsonData[i]).to.have.property(\"releaseTime\")\r",
+                  "        pm.expect(jsonData[i]).to.have.property(\"comments\")\r",
+                  "        pm.expect(jsonData[i]).to.have.property(\"captions\")\r",
+                  "    }\r",
+                  "});\r",
+                  "\r",
+                  "var maxVideos = parseInt(pm.request.url.query.get(\"maxVideos\")) || 10;\r",
+                  "var maxPages = parseInt(pm.request.url.query.get(\"maxPages\")) || 2;\r",
+                  "const limite = maxPages * 100; // Limite DailyMotion = 100\r",
+                  "pm.test(`Validar límites: Solicitado ${maxVideos}, Máx Páginas ${maxPages} (Capacidad: ${limite} páginas como máximo)`, function () {\r",
+                  "     \r",
+                  "    const expectedMax = Math.min(maxVideos, limite);\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var actualCount = jsonData.length;\r",
+                  "\r",
+                  "    pm.expect(actualCount).to.be.at.most(expectedMax, \r",
+                  "        `El servidor devolvió ${actualCount} vídeos, pero el límite combinado debería ser ${expectedMax}`);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La estructura de user es correcta\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    \r",
+                  "    jsonData.forEach(function(video) {\r",
+                  "        var user = video.user;\r",
+                  "        pm.expect(user.name).to.be.a('string').and.not.empty;\r",
+                  "        pm.expect(user.user_link).to.be.a('string').and.include('https://');\r",
+                  "        pm.expect(user.picture_link).to.be.a('string').and.include('https://');\r",
+                  "    });\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Los tipos de datos del vídeo son correcos\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    jsonData.forEach(function(video) {\r",
+                  "        pm.expect(video.id).to.be.a('string');\r",
+                  "        pm.expect(video.name).to.be.a('string').and.not.empty;\r",
+                  "        pm.expect(video.description).to.be.a('string');\r",
+                  "        pm.expect(video.releaseTime).to.be.a('string');\r",
+                  "        \r",
+                  "        // Validación de objetos anidados y arrays\r",
+                  "        pm.expect(video.user).to.be.an('object');\r",
+                  "        pm.expect(video.comments).to.be.an('array');\r",
+                  "        pm.expect(video.captions).to.be.an('array');\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{dailymotionBaseUrl}}/videos",
+              "host": [
+                "{{dailymotionBaseUrl}}"
+              ],
+              "path": [
+                "videos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DailyMotion GET Canales",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Estado es 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"El cuerpo contiene un canal válido\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.id).to.eql(\"shortfilms\");\r",
+                  "    pm.expect(jsonData.videos).to.be.an('array');\r",
+                  "    pm.expect(jsonData.name).to.be.a('string');\r",
+                  "    pm.expect(jsonData.createdTime).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "var maxVideos = parseInt(pm.request.url.query.get(\"maxVideos\")) || 10;\r",
+                  "var maxPages = parseInt(pm.request.url.query.get(\"maxPages\")) || 2;\r",
+                  "const limite = maxPages * 100; // Limite DailyMotion = 100\r",
+                  "pm.test(`Validar límites: Solicitado ${maxVideos}, Máx Páginas ${maxPages} (Capacidad: ${limite} páginas como máximo)`, function () {\r",
+                  "     \r",
+                  "    const expectedMax = Math.min(maxVideos, limite);\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var actualCount = jsonData.videos.length;\r",
+                  "\r",
+                  "    pm.expect(actualCount).to.be.at.most(expectedMax, \r",
+                  "        `El servidor devolvió ${actualCount} vídeos, pero el límite combinado debería ser ${expectedMax}`);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Cada vídeo dentro del canal cumple el modelo VMVideo\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    \r",
+                  "    jsonData.videos.forEach(function(video, index) {\r",
+                  "        pm.expect(video.id).to.be.a('string').and.not.empty;\r",
+                  "        pm.expect(video.name).to.be.a('string').and.not.empty;\r",
+                  "        pm.expect(video.releaseTime).to.be.a('string');\r",
+                  "        pm.expect(video.comments).to.be.an('array');\r",
+                  "        pm.expect(video.captions).to.be.an('array');\r",
+                  "        pm.test(`El autor del vídeo ${video.id} es válido`, function () {\r",
+                  "            var user = video.user;\r",
+                  "            pm.expect(user).to.be.an('object');\r",
+                  "            pm.expect(user.name).to.be.a('string').and.not.empty;\r",
+                  "            pm.expect(user.user_link).to.be.a('string').and.include('https://');\r",
+                  "            pm.expect(user.picture_link).to.be.a('string').and.include('https://');\r",
+                  "        });\r",
+                  "    });\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{dailymotionBaseUrl}}/channels/shortfilms?maxPages=2&maxVideos=10",
+              "host": [
+                "{{dailymotionBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "shortfilms"
+              ],
+              "query": [
+                {
+                  "key": "maxPages",
+                  "value": "2"
+                },
+                {
+                  "key": "maxVideos",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DailyMotion GET Canales negativo 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"El código de estado es 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{dailymotionBaseUrl}}/channels/patatas",
+              "host": [
+                "{{dailymotionBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "patatas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DailyMotion GET Canales negativo 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"El código de estado es 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{dailymotionBaseUrl}}/channels/shortfilms?maxPages=a",
+              "host": [
+                "{{dailymotionBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "shortfilms"
+              ],
+              "query": [
+                {
+                  "key": "maxPages",
+                  "value": "a"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DailyMotion POST Canales",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Estado es 201 Created\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"El cuerpo contiene un canal válido\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.id).to.eql(\"tv\");\r",
+                  "    pm.expect(jsonData.videos).to.be.an('array');\r",
+                  "    pm.expect(jsonData.name).to.be.a('string');\r",
+                  "    pm.expect(jsonData.createdTime).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "var maxVideos = parseInt(pm.request.url.query.get(\"maxVideos\")) || 10;\r",
+                  "var maxPages = parseInt(pm.request.url.query.get(\"maxPages\")) || 2;\r",
+                  "const limite = maxPages * 100; // Limite DailyMotion = 100\r",
+                  "pm.test(`Validar límites: Solicitado ${maxVideos}, Máx Páginas ${maxPages} (Capacidad: ${limite} páginas como máximo)`, function () {\r",
+                  "     \r",
+                  "    const expectedMax = Math.min(maxVideos, limite);\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var actualCount = jsonData.videos.length;\r",
+                  "\r",
+                  "   \r",
+                  "    pm.expect(actualCount).to.be.at.most(expectedMax, \r",
+                  "        `El servidor devolvió ${actualCount} vídeos, pero el límite combinado debería ser ${expectedMax}`);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Cada vídeo dentro del canal cumple el modelo VMVideo\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    \r",
+                  "    jsonData.videos.forEach(function(video, index) {\r",
+                  "        pm.expect(video.id).to.be.a('string').and.not.empty;\r",
+                  "        pm.expect(video.name).to.be.a('string').and.not.empty;\r",
+                  "        pm.expect(video.releaseTime).to.be.a('string');\r",
+                  "        pm.expect(video.comments).to.be.an('array');\r",
+                  "        pm.expect(video.captions).to.be.an('array');\r",
+                  "        pm.test(`El autor del vídeo ${video.id} es válido`, function () {\r",
+                  "            var user = video.user;\r",
+                  "            pm.expect(user).to.be.an('object');\r",
+                  "            pm.expect(user.name).to.be.a('string').and.not.empty;\r",
+                  "            pm.expect(user.user_link).to.be.a('string').and.include('https://');\r",
+                  "            pm.expect(user.picture_link).to.be.a('string').and.include('https://');\r",
+                  "        });\r",
+                  "    });\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": " Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{dailymotionBaseUrl}}/channels/tv?maxPages=2&maxVideos=10",
+              "host": [
+                "{{dailymotionBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "tv"
+              ],
+              "query": [
+                {
+                  "key": "maxPages",
+                  "value": "2"
+                },
+                {
+                  "key": "maxVideos",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PeerTube GET Canal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"El estado es 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"El cuerpo contiene un canal válido\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.name).to.eql(\"tv\");\r",
+                  "    pm.expect(jsonData.videos).to.be.an('array');\r",
+                  "    pm.expect(jsonData.name).to.be.a('string');\r",
+                  "    pm.expect(jsonData.createdTime).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "var maxVideos = parseInt(pm.request.url.query.get(\"maxVideos\")) || 10;\r",
+                  "var maxComments = parseInt(pm.request.url.query.get(\"maxComments\")) || 2;\r",
+                  "\r",
+                  "pm.test(`Se respeta el límite de maxVideos (Máximo: ${maxVideos})`, function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var actualCount = jsonData.videos.length;\r",
+                  "    pm.expect(actualCount).to.be.at.most(maxVideos, \r",
+                  "        `El servidor devolvió ${actualCount} vídeos, superando el límite de ${maxVideos}`);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(`Cada vídeo cumple el modelo VMVideo y respeta maxComments (Máximo: ${maxComments})`, function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    \r",
+                  "    jsonData.videos.forEach(function(video) {\r",
+                  "        pm.expect(video.id).to.be.a('string').and.not.empty;\r",
+                  "        pm.expect(video.name).to.be.a('string').and.not.empty;\r",
+                  "        pm.expect(video.releaseTime).to.be.a('string');\r",
+                  "        pm.expect(video.comments).to.be.an('array');\r",
+                  "        pm.expect(video.captions).to.be.an('array');\r",
+                  "        \r",
+                  "        // Validar límite de comentarios\r",
+                  "        pm.expect(video.comments.length).to.be.at.most(maxComments,\r",
+                  "            `El vídeo ${video.id} tiene ${video.comments.length} comentarios, superando el límite de ${maxComments}`);\r",
+                  "\r",
+                  "        // Validar usuario\r",
+                  "        var user = video.user;\r",
+                  "        pm.expect(user).to.be.an('object');\r",
+                  "        pm.expect(user.name).to.be.a('string').and.not.empty;\r",
+                  "        pm.expect(user.user_link).to.be.a('string').and.include('http');\r",
+                  "        pm.expect(user.picture_link).to.be.a('string').and.include('http');\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{peertubeBaseUrl}}/channels/tv?maxVideos=10&maxComments=2",
+              "host": [
+                "{{peertubeBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "tv"
+              ],
+              "query": [
+                {
+                  "key": "maxVideos",
+                  "value": "10"
+                },
+                {
+                  "key": "maxComments",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PeerTube Canal Negativo 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"El código de estado es 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{peertubeBaseUrl}}/channels/noExiste",
+              "host": [
+                "{{peertubeBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "noExiste"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PeerTube GET Canal Negativo 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"El código de estado es 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{peertubeBaseUrl}}/channels/tv?maxVideos=a",
+              "host": [
+                "{{peertubeBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "tv"
+              ],
+              "query": [
+                {
+                  "key": "maxVideos",
+                  "value": "a"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PeerTube POST Canal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"El estado es 201 Created\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"El cuerpo contiene el canal que se ha exportado\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.name).to.eql(\"tv\");\r",
+                  "    pm.expect(jsonData.videos).to.be.an('array');\r",
+                  "    pm.expect(jsonData.name).to.be.a('string');\r",
+                  "    pm.expect(jsonData.createdTime).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "var maxVideos = parseInt(pm.request.url.query.get(\"maxVideos\")) || 10;\r",
+                  "var maxComments = parseInt(pm.request.url.query.get(\"maxComments\")) || 2;\r",
+                  "\r",
+                  "pm.test(`Se respeta el límite de maxVideos (Máximo: ${maxVideos}) en la respuesta`, function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var actualCount = jsonData.videos.length;\r",
+                  "    pm.expect(actualCount).to.be.at.most(maxVideos);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(`Cada vídeo exportado respeta maxComments (Máximo: ${maxComments}) y el modelo`, function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    \r",
+                  "    jsonData.videos.forEach(function(video) {\r",
+                  "        pm.expect(video.id).to.be.a('string').and.not.empty;\r",
+                  "        pm.expect(video.name).to.be.a('string').and.not.empty;\r",
+                  "        pm.expect(video.comments).to.be.an('array');\r",
+                  "        pm.expect(video.comments.length).to.be.at.most(maxComments);\r",
+                  "        \r",
+                  "        var user = video.user;\r",
+                  "        pm.expect(user).to.be.an('object');\r",
+                  "        pm.expect(user.name).to.be.a('string').and.not.empty;\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{peertubeBaseUrl}}/channels/tv?maxVideos=10&maxComments=2",
+              "host": [
+                "{{peertubeBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "tv"
+              ],
+              "query": [
+                {
+                  "key": "maxVideos",
+                  "value": "10"
+                },
+                {
+                  "key": "maxComments",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "1. Canales (Channels)",
+      "item": [
+        {
+          "name": "Crear Canal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"Id property should have specific value\", () => { pm.expect(jsonData[\"id\"]).to.include(\"80\"); })",
+                  "",
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.id) {",
+                  "        pm.collectionVariables.set(\"channelId\", jsonData.id);",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})",
+                  "",
+                  "pm.test('Response has id and name', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.id).to.exist;",
+                  "    pm.expect(jsonData.name).to.exist;",
+                  "    if (jsonData.id !== undefined) {",
+                  "        pm.collectionVariables.set('channelId', jsonData.id);",
+                  "    }",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": \"80\",\r\n    \"name\": \"tv\",\r\n    \"description\": \"canal de videos random\",\r\n    \"createdTime\": \"2023-01-01T23:36:17.306Z\",\r\n    \"videos\": [\r\n        {\r\n            \"id\": \"21856\",\r\n            \"name\": \"Alien: Isolation live on iOS - 1/9/2023, 10:17:06 PM\",\r\n            \"description\": \"HOW WILL YOU SURVIVE? Discover the true meaning of fear in Alien: Isolation, a survival horror set in an atmosphere of constant dread and mortal danger.\",\r\n            \"releaseTime\": \"2023-01-09T22:32:41.126Z\",\r\n            \"comments\": [{\r\n                    \"id\": \"3955\",\r\n                    \"text\": \"Funniest video I've ever seen\",\r\n                    \"createdOn\": \"2023-01-03T23:45:40.196Z\"\r\n                }],\r\n            \"captions\": [\r\n                {\r\n                    \"id\": \"1\",\r\n                    \"name\": \"/lazy-static/video-captions/68efe0a2-8ed8-4a6d-831a-ab8f5fc8f7fc-cy.vtt\",\r\n                    \"language\": \"Spanish\"\r\n                }\r\n            ],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        },\r\n        {\r\n            \"id\": \"21855\",\r\n            \"name\": \"Alien: Isolation live on iOS - 1/9/2023, 9:51:45 PM\",\r\n            \"description\": \"HOW WILL YOU SURVIVE? Discover the true meaning of fear in Alien: Isolation, a survival horror set in an atmosphere of constant dread and mortal danger.\",\r\n            \"releaseTime\": \"2023-01-09T22:21:23.816Z\",\r\n            \"comments\": [],\r\n            \"captions\": [\r\n                {\r\n                    \"id\": \"2\",\r\n                    \"name\": \"/lazy-static/video-captions/b62fe117-7ae9-4214-975c-33558d1d71eb-cy.vtt\",\r\n                    \"language\": \"Welsh\"\r\n                }\r\n            ],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        },\r\n        {\r\n            \"id\": \"6032\",\r\n            \"name\": \"Pickle-Kim\",\r\n            \"description\": \"It's not super sad though\",\r\n            \"releaseTime\": \"2023-01-02T17:26:13.298Z\",\r\n            \"comments\": [\r\n                {\r\n                    \"id\": \"3956\",\r\n                    \"text\": \"Funniest shit I've ever seen\",\r\n                    \"createdOn\": \"2023-01-03T23:45:40.196Z\"\r\n                }\r\n            ],\r\n            \"captions\": [\r\n                {\r\n                    \"id\": \"3\",\r\n                    \"name\": \"/lazy-static/video-captions/f688d53c-323a-4d9b-851d-9d9b4a743532-ko.vtt\",\r\n                    \"language\": \"Korean\"\r\n                }\r\n            ],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        },\r\n        {\r\n            \"id\": \"6014\",\r\n            \"name\": \"High on Life Game\",\r\n            \"description\": \"Sounds familiar doesn’t it?\",\r\n            \"releaseTime\": \"2023-01-02T17:13:29.238Z\",\r\n            \"comments\": [],\r\n            \"captions\": [\r\n                {\r\n                    \"id\": \"4\",\r\n                    \"name\": \"/lazy-static/video-captions/1ee4a3c5-fb0b-4cd7-b4c9-b902cb41eb74-en.vtt\",\r\n                    \"language\": \"English\"\r\n                }\r\n            ],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        },\r\n        {\r\n            \"id\": \"5638\",\r\n            \"name\": \"The brain plan\",\r\n            \"description\": null,\r\n            \"releaseTime\": \"2023-01-02T11:26:57.201Z\",\r\n            \"comments\": [],\r\n            \"captions\": [\r\n                {\r\n                    \"id\": \"5\",\r\n                    \"name\": \"/lazy-static/video-captions/1118903d-f760-4230-aea9-edf40a8bb7b1-en.vtt\",\r\n                    \"language\": \"English\"\r\n                }\r\n            ],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        },\r\n        {\r\n            \"id\": \"5404\",\r\n            \"name\": \"The News, in 480p, bloopers and lol!\",\r\n            \"description\": \"A good way to test uploads.\",\r\n            \"releaseTime\": \"2023-01-02T10:43:48.160Z\",\r\n            \"comments\": [],\r\n            \"captions\": [\r\n                {\r\n                    \"id\": \"6\",\r\n                    \"name\": \"/lazy-static/video-captions/8309b1ff-361b-424d-9132-2a505712533c-en.vtt\",\r\n                    \"language\": \"English\"\r\n                }\r\n            ],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        },\r\n        {\r\n            \"id\": \"5368\",\r\n            \"name\": \"The Internet\",\r\n            \"description\": null,\r\n            \"releaseTime\": \"2023-01-02T10:41:12.558Z\",\r\n            \"comments\": [],\r\n            \"captions\": [\r\n                {\r\n                    \"id\": \"7\",\r\n                    \"name\": \"/lazy-static/video-captions/e6528ccd-3b21-4e06-a735-6be54858521d-en.vtt\",\r\n                    \"language\": \"English\"\r\n                }\r\n            ],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        },\r\n        {\r\n            \"id\": \"5326\",\r\n            \"name\": \"A beautiful timelapse\",\r\n            \"description\": \"Found somewhere on the web!\",\r\n            \"releaseTime\": \"2023-01-02T10:38:40.879Z\",\r\n            \"comments\": [],\r\n            \"captions\": [],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels"
+              ]
+            },
+            "description": "Crea un nuevo canal en el sistema VideoMiner. Espera código 201 y devuelve el canal creado con su ID. El ID se guarda en la variable de colección {{channelId}} para ser reutilizado por los siguientes requests."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Todos los Canales",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})",
+                  "",
+                  "pm.test('Response is a non-empty array containing created channel', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "    pm.expect(jsonData.length).to.be.at.least(1);",
+                  "    pm.expect(jsonData.map(function (x) {",
+                  "        return String(x.id);",
+                  "    })).to.include(String(pm.collectionVariables.get('channelId')));",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels"
+              ]
+            },
+            "description": "Recupera la lista completa de canales registrados. Espera código 200 y un array que contiene al menos el canal recién creado."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Canal por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => { pm.response.to.have.status(200); });",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"Id property should have specific value\", () => { pm.expect(jsonData[\"id\"]).to.include(\"80\"); })",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels/{{channelId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "{{channelId}}"
+              ]
+            },
+            "description": "Recupera los detalles de un canal específico identificado por {{channelId}}. Espera código 200 y un objeto con el id solicitado."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Canal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204 (No Content)\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"80\",\n    \"name\": \"tv\",\n    \"description\": \"canal de videos random despues del PUT\",\n    \"createdTime\": \"2023-01-01T23:36:17.306Z\",\n    \"videos\": [\n        {\n            \"id\": \"21856\",\n            \"name\": \"Alien: Isolation live on iOS - 1/9/2023, 10:17:06 PM\",\n            \"description\": \"HOW WILL YOU SURVIVE? Discover the true meaning of fear in Alien: Isolation, a survival horror set in an atmosphere of constant dread and mortal danger.\",\n            \"releaseTime\": \"2023-01-09T22:32:41.126Z\",\n            \"comments\": [{\n                    \"id\": \"3955\",\n                    \"text\": \"Funniest video I've ever seen\",\n                    \"createdOn\": \"2023-01-03T23:45:40.196Z\"\n                }],\n            \"captions\": [\n                {\n                    \"id\": \"1\",\n                    \"name\": \"/lazy-static/video-captions/68efe0a2-8ed8-4a6d-831a-ab8f5fc8f7fc-cy.vtt\",\n                    \"language\": \"Spanish\"\n                }\n            ],\n            \"user\": {\n                \"name\": \"stux\",\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\n            }\n        },\n        {\n            \"id\": \"21855\",\n            \"name\": \"Alien: Isolation live on iOS - 1/9/2023, 9:51:45 PM\",\n            \"description\": \"HOW WILL YOU SURVIVE? Discover the true meaning of fear in Alien: Isolation, a survival horror set in an atmosphere of constant dread and mortal danger.\",\n            \"releaseTime\": \"2023-01-09T22:21:23.816Z\",\n            \"comments\": [],\n            \"captions\": [\n                {\n                    \"id\": \"2\",\n                    \"name\": \"/lazy-static/video-captions/b62fe117-7ae9-4214-975c-33558d1d71eb-cy.vtt\",\n                    \"language\": \"Welsh\"\n                }\n            ],\n            \"user\": {\n                \"name\": \"stux\",\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\n            }\n        },\n        {\n            \"id\": \"6032\",\n            \"name\": \"Pickle-Kim\",\n            \"description\": \"It's not super sad though\",\n            \"releaseTime\": \"2023-01-02T17:26:13.298Z\",\n            \"comments\": [\n                {\n                    \"id\": \"3956\",\n                    \"text\": \"Funniest shit I've ever seen\",\n                    \"createdOn\": \"2023-01-03T23:45:40.196Z\"\n                }\n            ],\n            \"captions\": [\n                {\n                    \"id\": \"3\",\n                    \"name\": \"/lazy-static/video-captions/f688d53c-323a-4d9b-851d-9d9b4a743532-ko.vtt\",\n                    \"language\": \"Korean\"\n                }\n            ],\n            \"user\": {\n                \"name\": \"stux\",\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\n            }\n        },\n        {\n            \"id\": \"6014\",\n            \"name\": \"High on Life Game\",\n            \"description\": \"Sounds familiar doesn’t it?\",\n            \"releaseTime\": \"2023-01-02T17:13:29.238Z\",\n            \"comments\": [],\n            \"captions\": [\n                {\n                    \"id\": \"4\",\n                    \"name\": \"/lazy-static/video-captions/1ee4a3c5-fb0b-4cd7-b4c9-b902cb41eb74-en.vtt\",\n                    \"language\": \"English\"\n                }\n            ],\n            \"user\": {\n                \"name\": \"stux\",\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\n            }\n        },\n        {\n            \"id\": \"5638\",\n            \"name\": \"The brain plan\",\n            \"description\": null,\n            \"releaseTime\": \"2023-01-02T11:26:57.201Z\",\n            \"comments\": [],\n            \"captions\": [\n                {\n                    \"id\": \"5\",\n                    \"name\": \"/lazy-static/video-captions/1118903d-f760-4230-aea9-edf40a8bb7b1-en.vtt\",\n                    \"language\": \"English\"\n                }\n            ],\n            \"user\": {\n                \"name\": \"stux\",\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\n            }\n        },\n        {\n            \"id\": \"5404\",\n            \"name\": \"The News, in 480p, bloopers and lol!\",\n            \"description\": \"A good way to test uploads.\",\n            \"releaseTime\": \"2023-01-02T10:43:48.160Z\",\n            \"comments\": [],\n            \"captions\": [\n                {\n                    \"id\": \"6\",\n                    \"name\": \"/lazy-static/video-captions/8309b1ff-361b-424d-9132-2a505712533c-en.vtt\",\n                    \"language\": \"English\"\n                }\n            ],\n            \"user\": {\n                \"name\": \"stux\",\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\n            }\n        },\n        {\n            \"id\": \"5368\",\n            \"name\": \"The Internet\",\n            \"description\": null,\n            \"releaseTime\": \"2023-01-02T10:41:12.558Z\",\n            \"comments\": [],\n            \"captions\": [\n                {\n                    \"id\": \"7\",\n                    \"name\": \"/lazy-static/video-captions/e6528ccd-3b21-4e06-a735-6be54858521d-en.vtt\",\n                    \"language\": \"English\"\n                }\n            ],\n            \"user\": {\n                \"name\": \"stux\",\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\n            }\n        },\n        {\n            \"id\": \"5326\",\n            \"name\": \"A beautiful timelapse\",\n            \"description\": \"Found somewhere on the web!\",\n            \"releaseTime\": \"2023-01-02T10:38:40.879Z\",\n            \"comments\": [],\n            \"captions\": [],\n            \"user\": {\n                \"name\": \"stux\",\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\n            }\n        }\n    ]\n}"
+            },
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels/{{channelId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "{{channelId}}"
+              ]
+            },
+            "description": "Actualiza la información del canal {{channelId}} (PUT idempotente). Espera código 200 o 204."
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar Actualización Canal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "})",
+                  "",
+                  "pm.test('Response time < 2000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Description was updated', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.description).to.include('PUT');",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels/{{channelId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "{{channelId}}"
+              ]
+            },
+            "description": "Verifica con un GET que el cambio del PUT anterior fue persistido correctamente."
+          },
+          "response": []
+        },
+        {
+          "name": "Añadir Video a Canal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"Id property should have specific value\", () => { pm.expect(jsonData[\"id\"]).to.include(\"21857\"); })",
+                  "",
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.id) {",
+                  "        pm.collectionVariables.set(\"videoId\", jsonData.id);",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})",
+                  "",
+                  "pm.test('Response has id and title/name', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.id).to.exist;",
+                  "    pm.expect(jsonData.title || jsonData.name).to.exist;",
+                  "    if (jsonData.id !== undefined) {",
+                  "        pm.collectionVariables.set('videoId', jsonData.id);",
+                  "    }",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"21857\",\n    \"name\": \"Posted video\",\n    \"description\": \"this video was posted to the tv channel\",\n    \"releaseTime\": \"2023-01-09T22:32:41.126Z\",\n    \"user\": {\n        \"name\": \"stux\",\n        \"user_link\": \"https://peertube.tv/accounts/stux\",\n        \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\n        },\n    \"comments\": [\n        {\n            \"id\": \"198\",\n            \"text\": \"Funniest video I've ever seen\",\n            \"createdOn\": \"2023-01-03T23:45:40.196Z\"\n        }\n            ],\n    \"captions\": [\n        {\n            \"id\": \"68\",\n            \"name\": \"/lazy-static/video-captions/68efe0a2-8ed8-4a6d-831a-ab8f5fc8f7fc-cy.vtt\",\n            \"language\": \"Spanish\"\n        }\n            ]\n}\n"
+            },
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels/{{channelId}}/videos",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "{{channelId}}",
+                "videos"
+              ]
+            },
+            "description": "Añade un nuevo video al canal {{channelId}}. Espera código 201 y guarda el id del video en {{videoId}}."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Videos de un Canal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"Returned response has 9 elements\", () => { pm.expect(jsonData.length).to.equal(9); })",
+                  "",
+                  "if(Array.isArray(jsonData) && jsonData.length > 0 && !pm.collectionVariables.get(\"videoId\")) {",
+                  "    pm.collectionVariables.set(\"videoId\", jsonData[0].id);",
+                  "}",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})",
+                  "",
+                  "pm.test('Response is a non-empty array containing created video', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "    pm.expect(jsonData.length).to.be.at.least(1);",
+                  "    pm.expect(jsonData.map(function (x) {",
+                  "        return String(x.id);",
+                  "    })).to.include(String(pm.collectionVariables.get('videoId')));",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels/{{channelId}}/videos",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "{{channelId}}",
+                "videos"
+              ]
+            },
+            "description": "Lista todos los videos asociados al canal {{channelId}}. Espera código 200 y un array que contiene el video recién creado."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Videos",
+      "item": [
+        {
+          "name": "Obtener Todos los Videos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})",
+                  "",
+                  "pm.test('Response is a non-empty array containing created video', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "    pm.expect(jsonData.length).to.be.at.least(1);",
+                  "    pm.expect(jsonData.map(function (x) {",
+                  "        return String(x.id);",
+                  "    })).to.include(String(pm.collectionVariables.get('videoId')));",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/videos",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "videos"
+              ]
+            },
+            "description": "Lista todos los videos del sistema. Espera código 200 y array no vacío que contiene {{videoId}}."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Video por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => { pm.response.to.have.status(200); });",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"Id property should have specific value\", () => { pm.expect(jsonData[\"id\"]).to.include(\"21857\"); })",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/videos/{{videoId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "videos",
+                "{{videoId}}"
+              ]
+            },
+            "description": "Recupera los detalles del video {{videoId}}. Espera código 200."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Video",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204 (No Content)\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"21857\",\n    \"name\": \"Posted video after PUT\",\n    \"description\": \"this video was posted to the tv channel and then updated\",\n    \"releaseTime\": \"2023-01-09T22:32:41.126Z\",\n    \"user\": {\n        \"name\": \"stux\",\n        \"user_link\": \"https://peertube.tv/accounts/stux\",\n        \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\n        },\n    \"comments\": [\n        {\n            \"id\": \"198\",\n            \"text\": \"Funniest video I've ever seen\",\n            \"createdOn\": \"2023-01-03T23:45:40.196Z\"\n        }\n            ],\n    \"captions\": [\n        {\n            \"id\": \"68\",\n            \"name\": \"/lazy-static/video-captions/68efe0a2-8ed8-4a6d-831a-ab8f5fc8f7fc-cy.vtt\",\n            \"language\": \"Spanish\"\n        }\n            ]\n}"
+            },
+            "url": {
+              "raw": "{{videominerBaseUrl}}/videos/{{videoId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "videos",
+                "{{videoId}}"
+              ]
+            },
+            "description": "Actualiza la información del video {{videoId}}. Espera código 200 o 204."
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar Actualización Video",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "})",
+                  "",
+                  "pm.test('Response time < 2000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Description was updated', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.description).to.include('updated');",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/videos/{{videoId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "videos",
+                "{{videoId}}"
+              ]
+            },
+            "description": "Verifica con un GET que el cambio del PUT anterior fue persistido correctamente."
+          },
+          "response": []
+        },
+        {
+          "name": "Añadir Comentario a Video",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", () => { pm.response.to.have.status(201); });",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"Id property should have specific value\", () => { pm.expect(jsonData[\"id\"]).to.include(\"896\"); })",
+                  "",
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.id) {",
+                  "        pm.collectionVariables.set(\"commentId\", jsonData.id);",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})",
+                  "",
+                  "pm.test('Response has id and text/content', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.id).to.exist;",
+                  "    pm.expect(jsonData.text || jsonData.content || jsonData.body || jsonData.comment).to.exist;",
+                  "    if (jsonData.id !== undefined) {",
+                  "        pm.collectionVariables.set('commentId', jsonData.id);",
+                  "    }",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"896\",\n  \"text\": \"¡Excelente explicación, gracias!\",\n  \"createdOn\": \"2024-05-02\"\n}"
+            },
+            "url": {
+              "raw": "{{videominerBaseUrl}}/videos/{{videoId}}/comments",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "videos",
+                "{{videoId}}",
+                "comments"
+              ]
+            },
+            "description": "Añade un comentario al video {{videoId}}. Espera código 201 y guarda el id en {{commentId}}."
+          },
+          "response": []
+        },
+        {
+          "name": "Añadir Subtítulo a Video",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", () => { pm.response.to.have.status(201); });",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"Id property should have specific value\", () => { pm.expect(jsonData[\"id\"]).to.include(\"987\"); })",
+                  "",
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.id) {",
+                  "        pm.collectionVariables.set(\"captionId\", jsonData.id);",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})",
+                  "",
+                  "pm.test('Response has id and language/name', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.id).to.exist;",
+                  "    pm.expect(jsonData.language || jsonData.name || jsonData.text || jsonData.content).to.exist;",
+                  "    if (jsonData.id !== undefined) {",
+                  "        pm.collectionVariables.set('captionId', jsonData.id);",
+                  "    }",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"987\",\n  \"name\": \"jajajajajjajjajajjajjajjajajjajajjajjjaj NO PUEDO PARAR DE REIRME\",\n  \"language\": \"es\"\n}"
+            },
+            "url": {
+              "raw": "{{videominerBaseUrl}}/videos/{{videoId}}/captions",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "videos",
+                "{{videoId}}",
+                "captions"
+              ]
+            },
+            "description": "Añade un subtítulo al video {{videoId}}. Espera código 201 y guarda el id en {{captionId}}."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Comentarios de Video",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "if(Array.isArray(jsonData) && jsonData.length > 0 && !pm.collectionVariables.get(\"commentId\")) {",
+                  "    pm.collectionVariables.set(\"commentId\", jsonData[0].id);",
+                  "}",
+                  "",
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "})",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})",
+                  "",
+                  "pm.test('Response is a non-empty array containing created comment', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "    pm.expect(jsonData.length).to.be.at.least(1);",
+                  "    pm.expect(jsonData.map(function (x) {",
+                  "        return String(x.id);",
+                  "    })).to.include(String(pm.collectionVariables.get('commentId')));",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/videos/{{videoId}}/comments",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "videos",
+                "{{videoId}}",
+                "comments"
+              ]
+            },
+            "description": "Lista los comentarios del video {{videoId}}. Espera código 200 y array que contiene {{commentId}}."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Subtítulos de Video",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "if(Array.isArray(jsonData) && jsonData.length > 0 && !pm.collectionVariables.get(\"captionId\")) {",
+                  "    pm.collectionVariables.set(\"captionId\", jsonData[0].id);",
+                  "}",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})",
+                  "",
+                  "pm.test('Response is a non-empty array containing created caption', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "    pm.expect(jsonData.length).to.be.at.least(1);",
+                  "    pm.expect(jsonData.map(function (x) {",
+                  "        return String(x.id);",
+                  "    })).to.include(String(pm.collectionVariables.get('captionId')));",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/videos/{{videoId}}/captions",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "videos",
+                "{{videoId}}",
+                "captions"
+              ]
+            },
+            "description": "Lista los subtítulos del video {{videoId}}. Espera código 200 y array que contiene {{captionId}}."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Comentarios (Comments)",
+      "item": [
+        {
+          "name": "Obtener Todos los Comentarios",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})",
+                  "",
+                  "pm.test('Response is a non-empty array containing created comment', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "    pm.expect(jsonData.length).to.be.at.least(1);",
+                  "    pm.expect(jsonData.map(function (x) {",
+                  "        return String(x.id);",
+                  "    })).to.include(String(pm.collectionVariables.get('commentId')));",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/comments",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "comments"
+              ]
+            },
+            "description": "Lista todos los comentarios del sistema. Espera código 200 y array que contiene {{commentId}}."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Comentario por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"id property should have specific value\", () => { pm.expect(jsonData[\"id\"]).to.include(\"896\"); })",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/comments/{{commentId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "comments",
+                "{{commentId}}"
+              ]
+            },
+            "description": "Recupera el comentario {{commentId}}. Espera código 200."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Comentario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204 (No Content)\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"¡Comentario editado y actualizado!\"\n}"
+            },
+            "url": {
+              "raw": "{{videominerBaseUrl}}/comments/{{commentId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "comments",
+                "{{commentId}}"
+              ]
+            },
+            "description": "Actualiza el comentario {{commentId}}. Espera código 200 o 204."
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar Actualización Comentario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "})",
+                  "",
+                  "pm.test('Response time < 2000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Fields were updated', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.id).to.exist;",
+                  "    pm.expect(jsonData.text).to.include('editado');",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/comments/{{commentId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "comments",
+                "{{commentId}}"
+              ]
+            },
+            "description": "Verifica con un GET que el cambio del PUT anterior fue persistido correctamente."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Subtítulos (Captions)",
+      "item": [
+        {
+          "name": "Obtener Todos los Subtítulos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})",
+                  "",
+                  "pm.test('Response is a non-empty array containing created caption', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "    pm.expect(jsonData.length).to.be.at.least(1);",
+                  "    pm.expect(jsonData.map(function (x) {",
+                  "        return String(x.id);",
+                  "    })).to.include(String(pm.collectionVariables.get('captionId')));",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/captions",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "captions"
+              ]
+            },
+            "description": "Lista todos los subtítulos del sistema. Espera código 200 y array que contiene {{captionId}}."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Subtítulo por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"Id property should have specific value\", () => { pm.expect(jsonData[\"id\"]).to.include(\"987\"); })",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Content-Type is application/json', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/captions/{{captionId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "captions",
+                "{{captionId}}"
+              ]
+            },
+            "description": "Recupera el subtítulo {{captionId}}. Espera código 200."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Subtítulo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204 (No Content)\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Inglés\",\n  \"language\": \"en\"\n}"
+            },
+            "url": {
+              "raw": "{{videominerBaseUrl}}/captions/{{captionId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "captions",
+                "{{captionId}}"
+              ]
+            },
+            "description": "Actualiza el subtítulo {{captionId}}. Espera código 200 o 204."
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar Actualización Subtítulo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "})",
+                  "",
+                  "pm.test('Response time < 2000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})",
+                  "",
+                  "pm.test('Fields were updated', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.id).to.exist;",
+                  "    pm.expect(jsonData.language).to.include('en');",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/captions/{{captionId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "captions",
+                "{{captionId}}"
+              ]
+            },
+            "description": "Verifica con un GET que el cambio del PUT anterior fue persistido correctamente."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Eliminación y Limpieza (Deletes)",
+      "item": [
+        {
+          "name": "Eliminar Subtítulo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204 (No Content)\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/captions/{{captionId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "captions",
+                "{{captionId}}"
+              ]
+            },
+            "description": "Elimina el subtítulo {{captionId}}. Espera código 200 o 204. Debe ejecutarse antes de eliminar el video padre."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Comentario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204 (No Content)\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/comments/{{commentId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "comments",
+                "{{commentId}}"
+              ]
+            },
+            "description": "Elimina el comentario {{commentId}}. Espera código 200 o 204. Debe ejecutarse antes de eliminar el video padre."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Video",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204 (No Content)\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/videos/{{videoId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "videos",
+                "{{videoId}}"
+              ]
+            },
+            "description": "Elimina el video {{videoId}}. Espera código 200 o 204. Debe ejecutarse antes de eliminar el canal padre."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Canal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204 (No Content)\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels/{{channelId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "{{channelId}}"
+              ]
+            },
+            "description": "Elimina el canal {{channelId}}. Espera código 200 o 204. Es el último request de limpieza."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "99. Casos Negativos",
+      "item": [
+        {
+          "name": "GET Canal Inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "})",
+                  "",
+                  "pm.test('Response time < 2000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels/999999999",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "999999999"
+              ]
+            },
+            "description": "Solicita un canal con ID inexistente. Debe devolver 404."
+          },
+          "response": []
+        },
+        {
+          "name": "GET Video Inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "})",
+                  "",
+                  "pm.test('Response time < 2000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/videos/999999999",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "videos",
+                "999999999"
+              ]
+            },
+            "description": "Solicita un video con ID inexistente. Debe devolver 404."
+          },
+          "response": []
+        },
+        {
+          "name": "GET Comentario Inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "})",
+                  "",
+                  "pm.test('Response time < 2000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/comments/999999999",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "comments",
+                "999999999"
+              ]
+            },
+            "description": "Solicita un comentario con ID inexistente. Debe devolver 404."
+          },
+          "response": []
+        },
+        {
+          "name": "GET Subtítulo Inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "})",
+                  "",
+                  "pm.test('Response time < 2000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/captions/999999999",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "captions",
+                "999999999"
+              ]
+            },
+            "description": "Solicita un subtítulo con ID inexistente. Debe devolver 404."
+          },
+          "response": []
+        },
+        {
+          "name": "POST Canal con Body Inválido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "})",
+                  "",
+                  "pm.test('Response time < 2000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"foo\": \"bar\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels"
+              ]
+            },
+            "description": "Crea un canal con un body inválido (campos requeridos faltantes). Debe devolver 400."
+          },
+          "response": []
+        },
+        {
+          "name": "POST Video sin Canal Padre",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400 or 404', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([",
+                  "        400,",
+                  "        404",
+                  "    ]);",
+                  "})",
+                  "",
+                  "pm.test('Response time < 2000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"test\", \"description\": \"test\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels/999999999/videos",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "999999999",
+                "videos"
+              ]
+            },
+            "description": "Intenta añadir un video a un canal inexistente. Debe devolver 404."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Canal Inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400 or 404', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([",
+                  "        400,",
+                  "        404",
+                  "    ]);",
+                  "})",
+                  "",
+                  "pm.test('Response time < 2000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"no existe\", \"description\": \"no existe\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels/999999999",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "999999999"
+              ]
+            },
+            "description": "Actualiza un canal con ID inexistente. Debe devolver 404."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Canal Inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400 or 404', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([",
+                  "        400,",
+                  "        404",
+                  "    ]);",
+                  "})",
+                  "",
+                  "pm.test('Response time < 2000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels/999999999",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "999999999"
+              ]
+            },
+            "description": "Elimina un canal con ID inexistente. Debe devolver 404."
+          },
+          "response": []
+        },
+        {
+          "name": "POST Canal Duplicado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 409 or 400', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([",
+                  "        409,",
+                  "        400",
+                  "    ]);",
+                  "})",
+                  "",
+                  "pm.test('Response time < 2000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer 123456789",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\": \"{{channelId}}\", \"name\": \"duplicado\", \"description\": \"intento duplicado\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels"
+              ]
+            },
+            "description": "Intenta crear un canal con un ID ya existente. Debe devolver 409 (conflicto) o 400."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT sin API key",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401(Unauthorized)\", function () {\r",
+                  "    pm.response.to.have.status(204);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test('Response time is acceptable', function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": \"80\",\r\n    \"name\": \"tv\",\r\n    \"description\": \"canal de videos random despues del PUT\",\r\n    \"createdTime\": \"2023-01-01T23:36:17.306Z\",\r\n    \"videos\": [\r\n        {\r\n            \"id\": \"21856\",\r\n            \"name\": \"Alien: Isolation live on iOS - 1/9/2023, 10:17:06 PM\",\r\n            \"description\": \"HOW WILL YOU SURVIVE? Discover the true meaning of fear in Alien: Isolation, a survival horror set in an atmosphere of constant dread and mortal danger.\",\r\n            \"releaseTime\": \"2023-01-09T22:32:41.126Z\",\r\n            \"comments\": [{\r\n                    \"id\": \"3955\",\r\n                    \"text\": \"Funniest video I've ever seen\",\r\n                    \"createdOn\": \"2023-01-03T23:45:40.196Z\"\r\n                }],\r\n            \"captions\": [\r\n                {\r\n                    \"id\": \"1\",\r\n                    \"name\": \"/lazy-static/video-captions/68efe0a2-8ed8-4a6d-831a-ab8f5fc8f7fc-cy.vtt\",\r\n                    \"language\": \"Spanish\"\r\n                }\r\n            ],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        },\r\n        {\r\n            \"id\": \"21855\",\r\n            \"name\": \"Alien: Isolation live on iOS - 1/9/2023, 9:51:45 PM\",\r\n            \"description\": \"HOW WILL YOU SURVIVE? Discover the true meaning of fear in Alien: Isolation, a survival horror set in an atmosphere of constant dread and mortal danger.\",\r\n            \"releaseTime\": \"2023-01-09T22:21:23.816Z\",\r\n            \"comments\": [],\r\n            \"captions\": [\r\n                {\r\n                    \"id\": \"2\",\r\n                    \"name\": \"/lazy-static/video-captions/b62fe117-7ae9-4214-975c-33558d1d71eb-cy.vtt\",\r\n                    \"language\": \"Welsh\"\r\n                }\r\n            ],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        },\r\n        {\r\n            \"id\": \"6032\",\r\n            \"name\": \"Pickle-Kim\",\r\n            \"description\": \"It's not super sad though\",\r\n            \"releaseTime\": \"2023-01-02T17:26:13.298Z\",\r\n            \"comments\": [\r\n                {\r\n                    \"id\": \"3956\",\r\n                    \"text\": \"Funniest shit I've ever seen\",\r\n                    \"createdOn\": \"2023-01-03T23:45:40.196Z\"\r\n                }\r\n            ],\r\n            \"captions\": [\r\n                {\r\n                    \"id\": \"3\",\r\n                    \"name\": \"/lazy-static/video-captions/f688d53c-323a-4d9b-851d-9d9b4a743532-ko.vtt\",\r\n                    \"language\": \"Korean\"\r\n                }\r\n            ],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        },\r\n        {\r\n            \"id\": \"6014\",\r\n            \"name\": \"High on Life Game\",\r\n            \"description\": \"Sounds familiar doesn’t it?\",\r\n            \"releaseTime\": \"2023-01-02T17:13:29.238Z\",\r\n            \"comments\": [],\r\n            \"captions\": [\r\n                {\r\n                    \"id\": \"4\",\r\n                    \"name\": \"/lazy-static/video-captions/1ee4a3c5-fb0b-4cd7-b4c9-b902cb41eb74-en.vtt\",\r\n                    \"language\": \"English\"\r\n                }\r\n            ],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        },\r\n        {\r\n            \"id\": \"5638\",\r\n            \"name\": \"The brain plan\",\r\n            \"description\": null,\r\n            \"releaseTime\": \"2023-01-02T11:26:57.201Z\",\r\n            \"comments\": [],\r\n            \"captions\": [\r\n                {\r\n                    \"id\": \"5\",\r\n                    \"name\": \"/lazy-static/video-captions/1118903d-f760-4230-aea9-edf40a8bb7b1-en.vtt\",\r\n                    \"language\": \"English\"\r\n                }\r\n            ],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        },\r\n        {\r\n            \"id\": \"5404\",\r\n            \"name\": \"The News, in 480p, bloopers and lol!\",\r\n            \"description\": \"A good way to test uploads.\",\r\n            \"releaseTime\": \"2023-01-02T10:43:48.160Z\",\r\n            \"comments\": [],\r\n            \"captions\": [\r\n                {\r\n                    \"id\": \"6\",\r\n                    \"name\": \"/lazy-static/video-captions/8309b1ff-361b-424d-9132-2a505712533c-en.vtt\",\r\n                    \"language\": \"English\"\r\n                }\r\n            ],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        },\r\n        {\r\n            \"id\": \"5368\",\r\n            \"name\": \"The Internet\",\r\n            \"description\": null,\r\n            \"releaseTime\": \"2023-01-02T10:41:12.558Z\",\r\n            \"comments\": [],\r\n            \"captions\": [\r\n                {\r\n                    \"id\": \"7\",\r\n                    \"name\": \"/lazy-static/video-captions/e6528ccd-3b21-4e06-a735-6be54858521d-en.vtt\",\r\n                    \"language\": \"English\"\r\n                }\r\n            ],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        },\r\n        {\r\n            \"id\": \"5326\",\r\n            \"name\": \"A beautiful timelapse\",\r\n            \"description\": \"Found somewhere on the web!\",\r\n            \"releaseTime\": \"2023-01-02T10:38:40.879Z\",\r\n            \"comments\": [],\r\n            \"captions\": [],\r\n            \"user\": {\r\n                \"name\": \"stux\",\r\n                \"user_link\": \"https://peertube.tv/accounts/stux\",\r\n                \"picture_link\": \"https://peertube.tv/lazy-static/avatars/f8463b3f-2e2e-4f36-8bd3-fa9c0ef4f463.png\"\r\n            }\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{videominerBaseUrl}}/channels/{{channelId}}",
+              "host": [
+                "{{videominerBaseUrl}}"
+              ],
+              "path": [
+                "channels",
+                "{{channelId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "dailymotionBaseUrl",
+      "value": ""
+    },
+    {
+      "key": "peertubeBaseUrl",
+      "value": ""
+    },
+    {
+      "key": "videominerBaseUrl",
+      "value": "http://localhost:8080/videominer/api"
+    },
+    {
+      "key": "channelId",
+      "value": ""
+    },
+    {
+      "key": "videoId",
+      "value": ""
+    },
+    {
+      "key": "commentId",
+      "value": ""
+    },
+    {
+      "key": "captionId",
+      "value": ""
+    }
+  ]
+}
