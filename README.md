@@ -80,3 +80,36 @@ curl -X POST http://localhost:8080/videominer/channels \
 
 - `aiss.videominer.security.WebConfig#addInterceptors(...)`: aplica el interceptor a `/videominer/**`.
 - `aiss.videominer.security.ApiKeyInterceptor#preHandle(...)`: valida `Authorization: Bearer <token>` y devuelve `401` si falta la clave en `POST`, `PUT` o `DELETE`.
+
+## Pruebas Postman
+
+En la carperta `tests` se encuentran varios archivos listos para importar como una colección de pruebas Postman:
+- `VideoMiner_BasicCollection.postman_collection.json` es la colección que nos ha sido proporcionada en EV, pero modificada
+para que la petición de `POST` incluya la API key como cabecera.
+- `VideoMiner_CompleteAPITests.postman_collection.json` es una suite completa de pruebas que hemos creado para comprobar
+el funcionamiento de los tres servicios. Empieza haciendo pruebas para DailyMotionMiner y PeerTubeMiner, y a
+continuación incluye pruebas para todas las operaciones posibles en VideoMiner, haciendo uso de API key y la url del despliegue en la nube. Incluye también pruebas para casos
+negativos por ejemplo un recurso no encontrado. Es posible que para el correcto funcionamiento de las pruebas haya que definir
+una serie de variables de entorno en Postman:
+
+| Variable              |                                          Valor (Nube) |                     Valor (Local) |
+|:----------------------|------------------------------------------------------:|----------------------------------:|
+| dailymotionBaseUrl    | https://dailymotionminer-api.onrender.com/dailymotion | http://localhost:8081/dailymotion |
+| peertubeBaseUrl       |       https://peertubeminer-api.onrender.com/peertube |    http://localhost:8082/peertube |
+| videominerBaseUrl     |        https://videominer-api.onrender.com/videominer |  http://localhost:8080/videominer |
+| channelId             |                                                    80 |                                80 |
+| videoId               |                                                 21857 |                             21857 |
+| commentId             |                                                   896 |                               896 |
+| commentId             |                                                   987 |                               987 |
+
+## Autores
+
+Julian Canela Ramos (julcanram@alum.us.es)
+
+Noelia Páez Páez (noepaepae@alum.us.es)
+
+Karim Elhaidini Lopez (karelhlop@alum.us.es)
+
+Carlos Rodríguez Solano (carrodsol@alum.us.es)
+
+Jesús Pérez Ortiz (jesperort@alum.us.es)
