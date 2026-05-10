@@ -2,6 +2,7 @@ package com.aiss.dailymotionminer;
 import com.aiss.dailymotionminer.controller.ChannelController;
 import com.aiss.dailymotionminer.controller.VideoController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,9 @@ public class InitialDataRunner implements CommandLineRunner {
     ChannelController c;
     @Autowired
     VideoController v;
+
+    @Value("${videominer.api.key}")
+    private String apiKey;
 
     public InitialDataRunner(ChannelController c, VideoController v) {
         this.c = c;
@@ -25,8 +29,8 @@ public class InitialDataRunner implements CommandLineRunner {
         try {
             Thread.sleep(15000);
             System.out.println("¡Lanzando la petición a DailyMotion y enviando a VideoMiner!");
-            c.postChannelToVideoMiner("music",10,2);
-            c.postChannelToVideoMiner("shortfilms",10,2);
+            c.postChannelToVideoMiner("music",10,2, apiKey);
+            c.postChannelToVideoMiner("shortfilms",10,2, apiKey);
 
             System.out.println("¡Carga inicial completada con éxito!");
 

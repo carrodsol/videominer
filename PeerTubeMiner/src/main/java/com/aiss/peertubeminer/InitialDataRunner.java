@@ -1,6 +1,7 @@
 package com.aiss.peertubeminer;
 import com.aiss.peertubeminer.controller.ChannelController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,9 @@ public class InitialDataRunner implements CommandLineRunner {
 
     @Autowired
     ChannelController c;
+
+    @Value("${videominer.api.key}")
+    private String apiKey;
 
     public InitialDataRunner(ChannelController c) {
         this.c = c;
@@ -22,8 +26,8 @@ public class InitialDataRunner implements CommandLineRunner {
         try {
             Thread.sleep(15000);
             System.out.println("¡Lanzando la petición a PeerTube y enviando a VideoMiner!");
-            c.postChannel("tv",10,2);
-            c.postChannel("chem0013_videos",10,2);
+            c.postChannel("tv",10,2, apiKey);
+            c.postChannel("chem0013_videos",10,2, apiKey);
             System.out.println("¡Carga inicial completada con éxito!");
 
         } catch (Exception e) {

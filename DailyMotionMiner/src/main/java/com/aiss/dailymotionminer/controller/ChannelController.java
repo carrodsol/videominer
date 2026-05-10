@@ -11,9 +11,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -74,10 +77,13 @@ public class ChannelController {
     }
 
     @Operation(summary = "Exportar canal a VideoMiner", tags = {"Channels", "post"}, description = "Envía un canal a VideoMiner")
+    @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Canal exportado con éxito", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Parámetros incorrectos",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Parámetros incorrecto de búsqueda\"}"), mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "No autorizado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"No autorizado: falta la API Key en los headers\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Recurso no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"El recurso solicitado no existe en DailyMotion\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",
@@ -88,11 +94,19 @@ public class ChannelController {
     public VMChannel postChannelToVideoMiner(
             @PathVariable String id,
             @RequestParam(defaultValue = "10") Integer maxVideos,
-            @RequestParam(defaultValue = "2") Integer maxPages) {
+            @RequestParam(defaultValue = "2") Integer maxPages,
+            @RequestHeader(value = "Authorization", required = false) String apiKey) {
 
         VMChannel channel = getChannelById(id, maxVideos, maxPages);
+        HttpHeaders headers = new HttpHeaders();
+        if(apiKey != null && apiKey.startsWith("Bearer")) {
+            headers.set("Authorization", apiKey);
+        } else {
+            headers.setBearerAuth(apiKey);
+        }
+        HttpEntity<VMChannel> requestEntity = new HttpEntity<>(channel, headers);
 
-        restTemplate.postForObject(videoMinerBaseUrl + "/videominer/channels", channel, VMChannel.class);
+        restTemplate.postForObject(videoMinerBaseUrl + "/videominer/channels", requestEntity, VMChannel.class);
         return channel;
     }
 }

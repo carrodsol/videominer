@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,6 +42,14 @@ public class GlobalExceptionHandler {
         Map<String, Object> body = new HashMap<>();
         body.put("message", "El recurso solicitado no existe en PeerTube");
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    // Error 401: Se activa cuando falta la cabecera apikey
+    @ExceptionHandler({HttpClientErrorException.Unauthorized.class, MissingRequestHeaderException.class})
+    public ResponseEntity<Object> handleUnauthorized(Exception ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "No autorizado: falta la API Key en los headers");
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
 
     // Error 400: Se activa por parámetros incorrectos (como maxVideos o maxPages mal escritos)

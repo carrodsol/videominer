@@ -9,8 +9,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -50,10 +53,13 @@ public class ChannelController {
     }
 
     @Operation(summary = "Exportar canal a VideoMiner", tags = {"Channels", "post"}, description = "Envía un canal a VideoMiner")
+    @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Canal exportado con éxito", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Parámetros incorrectos",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"Parámetros incorrectos de búsqueda\"}"), mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "No autorizado",
+                    content = @Content(examples = @ExampleObject(value = "{\"message\": \"No autorizado: falta la API Key en los headers\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Recurso no encontrado",
                     content = @Content(examples = @ExampleObject(value = "{\"message\": \"El recurso solicitado no existe en PeerTube\"}"), mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Error interno",
@@ -63,10 +69,19 @@ public class ChannelController {
     @ResponseStatus(HttpStatus.CREATED)
     public VMChannel postChannel(@Parameter(example = "tv") @PathVariable String id,
                                  @RequestParam(defaultValue = "10") int maxVideos,
-                                 @RequestParam(defaultValue = "2") int maxComments) {
+                                 @RequestParam(defaultValue = "2") int maxComments,
+                                 @RequestHeader(value = "Authorization", required = false) String apiKey) {
         VMChannel channel = getChannel(id, maxVideos, maxComments);
         
-        restTemplate.postForObject(videoMinerBaseUrl + "/videominer/channels", channel, VMChannel.class);
+        HttpHeaders headers = new HttpHeaders();
+        if(apiKey != null && apiKey.startsWith("Bearer")) {
+            headers.set("Authorization", apiKey);
+        } else {
+            headers.setBearerAuth(apiKey);
+        }
+        HttpEntity<VMChannel> requestEntity = new HttpEntity<>(channel, headers);
+
+        restTemplate.postForObject(videoMinerBaseUrl + "/videominer/channels", requestEntity, VMChannel.class);
         return channel;
     }
 }
