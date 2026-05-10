@@ -1597,7 +1597,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"text\": \"¡Comentario editado y actualizado!\"\n}"
+              "raw": "{ \"id\": \"896\",\n  \"text\": \"¡Comentario editado y actualizado!\"\n}"
             },
             "url": {
               "raw": "{{videominerBaseUrl}}/comments/{{commentId}}",
@@ -1796,7 +1796,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Inglés\",\n  \"language\": \"en\"\n}"
+              "raw": "{\n    \"id\": \"896\",\n  \"name\": \"Inglés\",\n  \"language\": \"en\"\n}"
             },
             "url": {
               "raw": "{{videominerBaseUrl}}/captions/{{captionId}}",
@@ -2485,7 +2485,7 @@
               "script": {
                 "exec": [
                   "pm.test(\"Status code is 401(Unauthorized)\", function () {\r",
-                  "    pm.response.to.have.status(204);\r",
+                  "    pm.response.to.have.status(401);\r",
                   "});\r",
                   "\r",
                   "pm.test('Response time is acceptable', function () {\r",
