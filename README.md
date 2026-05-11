@@ -150,6 +150,8 @@ una serie de variables de entorno en Postman:
 | commentId             |                                                   896 |                               896 |
 | commentId             |                                                   987 |                               987 |
 
+IMPORTANTE: Si se quiere probar en local, se debe cambiar también la url de videominer a la que hacen post DailyMotionMiner y PeerTubeMiner, definidas en una variable en su `applicacion.properties`, pues el valor actual es la url de la nube.
+
 ## Autores
 
 Julian Canela Ramos (julcanram@alum.us.es)
